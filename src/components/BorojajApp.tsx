@@ -318,8 +318,6 @@ function HomePage({
   onDeposit,
   onWithdraw,
   onNavigate,
-  fixedDeposit,
-  onFixedDeposit,
   onPurchase,
 }: {
   action: (message: string) => void
@@ -329,15 +327,12 @@ function HomePage({
   onDeposit: (amount: number) => void
   onWithdraw: (amount: number) => void
   onNavigate: (page: Page) => void
-  fixedDeposit: FixedDeposit | null
-  onFixedDeposit: () => void
   onPurchase: (selectedPackage: VipPackage) => void
 }) {
   const [moneyAction, setMoneyAction] = useState<"deposit" | "withdraw" | null>(
     null,
   )
   const [amount, setAmount] = useState(500)
-  const [showFixedDeposit, setShowFixedDeposit] = useState(false)
   const dailyProfit = investment
     ? (investment.amount * investment.package.dailyRate) / 100
     : 0
@@ -367,15 +362,6 @@ function HomePage({
     }
     setMoneyAction(null)
     setAmount(500)
-  }
-
-  const confirmFixedDeposit = () => {
-    if (balance <= 0) {
-      action("সঞ্চয় নেই")
-      return
-    }
-    onFixedDeposit()
-    setShowFixedDeposit(false)
   }
 
   return (
@@ -417,68 +403,6 @@ function HomePage({
             </button>
           ))}
         </section>
-
-        <section
-          className={
-            fixedDeposit
-              ? "fixed-deposit-card active"
-              : "fixed-deposit-card"
-          }
-        >
-          <div className="fixed-deposit-mark">
-            <Icon name={fixedDeposit ? "check" : "calendar"} size={27} />
-          </div>
-          <div className="fixed-deposit-copy">
-            <span>৭ দিনের সঞ্চয়</span>
-            <h2>
-              {fixedDeposit
-                ? "সঞ্চয় নিরাপদে আবদ্ধ"
-                : "২% নিশ্চিত লাভ"}
-            </h2>
-            <p>
-              {fixedDeposit
-                ? `${money(fixedDeposit.principal)} এখন আবদ্ধ`
-                : "সাপ্তাহিক ২% লাভ"}
-            </p>
-          </div>
-          {fixedDeposit ? (
-            <div className="fixed-deposit-status">
-              <small>মেয়াদ ফুরোবে</small>
-              <strong>{fixedDeposit.expiresAt}</strong>
-            </div>
-          ) : (
-            <button onClick={() => setShowFixedDeposit(true)}>
-              বিস্তারিত দেখুন
-            </button>
-          )}
-        </section>
-
-        {fixedDeposit && (
-          <section className="fixed-deposit-summary">
-            {[
-              ["wallet", "আবদ্ধ মূলধন", money(fixedDeposit.principal)],
-              [
-                "chart",
-                "সাত দিনের লাভ",
-                money(fixedDeposit.profit),
-              ],
-              [
-                "gift",
-                "মেয়াদশেষে প্রাপ্য",
-                money(fixedDeposit.maturityAmount),
-              ],
-              ["calendar", "মুনাফার হার", "২%"],
-            ].map(([icon, label, value]) => (
-              <article key={label}>
-                <span>
-                  <Icon name={icon ?? ""} size={19} />
-                </span>
-                <small>{label}</small>
-                <strong>{value}</strong>
-              </article>
-            ))}
-          </section>
-        )}
 
         {(() => {
           const pkg = investment
@@ -635,100 +559,38 @@ function HomePage({
         </div>
       )}
 
-      {showFixedDeposit && !fixedDeposit && (
-        <div
-          className="purchase-modal-backdrop"
-          onClick={() => setShowFixedDeposit(false)}
-        >
-          <section
-            aria-modal="true"
-            className="purchase-modal fixed-deposit-modal"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-          >
-            <div className="purchase-modal-head">
-              <div>
-                <span>
-                  <Icon name="calendar" size={22} />
-                </span>
-                <div>
-                  <small>৭ দিনের সঞ্চয়</small>
-                  <h2>সঞ্চয় স্থির করুন</h2>
-                </div>
-              </div>
-              <button
-                aria-label="বন্ধ করুন"
-                onClick={() => setShowFixedDeposit(false)}
-              >
-                <Icon name="close" size={20} />
-              </button>
-            </div>
-
-            <div className="fixed-deposit-balance">
-              <small>আবদ্ধ হবে</small>
-              <strong>{money(balance)}</strong>
-              <span>সম্পূর্ণ সঞ্চয়</span>
-            </div>
-
-            <div className="fixed-deposit-projection">
-              <div>
-                <small>সাত দিনে লাভ</small>
-                <strong>{money(balance * 0.02)}</strong>
-              </div>
-              <div>
-                <small>মেয়াদশেষে মোট প্রাপ্য</small>
-                <strong>{money(balance * 1.02)}</strong>
-              </div>
-              <div>
-                <small>মেয়াদ ফুরোনোর দিন</small>
-                <strong>{expiryDateFromToday(7)}</strong>
-              </div>
-            </div>
-
-            <div className="fixed-deposit-rules">
-              <h3>স্থির সঞ্চয়ের নিয়মাবলি</h3>
-              <ol>
-              <li>সঞ্চয় আবদ্ধ হবে</li>
-              <li>আগে উত্তোলন নয়</li>
-              <li>২% লাভ যুক্ত</li>
-              <li>নতুন জমা উত্তোলনযোগ্য</li>
-              <li>পরে বাতিল নয়</li>
-              </ol>
-            </div>
-
-            <div className="purchase-actions">
-              <button
-                className="cancel"
-                onClick={() => setShowFixedDeposit(false)}
-              >
-                এখন নয়
-              </button>
-              <button
-                className="confirm"
-                disabled={balance <= 0}
-                onClick={confirmFixedDeposit}
-              >
-                সঞ্চয় স্থির করুন
-              </button>
-            </div>
-          </section>
-        </div>
-      )}
     </>
   )
 }
 
 function WorkPage({
+  action,
+  balance,
   investment,
   fixedDeposit,
   transactions,
   onExplore,
+  onFixedDeposit,
 }: {
+  action: (message: string) => void
+  balance: number
   investment: ActiveInvestment | null
   fixedDeposit: FixedDeposit | null
   transactions: DashboardTransaction[]
   onExplore: () => void
+  onFixedDeposit: () => void
 }) {
+  const [showFixedDeposit, setShowFixedDeposit] = useState(false)
+
+  const confirmFixedDeposit = () => {
+    if (balance <= 0) {
+      action("সঞ্চয় নেই")
+      return
+    }
+    onFixedDeposit()
+    setShowFixedDeposit(false)
+  }
+
   const dailyRate = investment ? investment.package.dailyRate / 100 : 0
   const dailyRows = investment
     ? Array.from({ length: investment.package.durationDays }, (_, index) => {
@@ -895,8 +757,11 @@ function WorkPage({
             <Icon name="calendar" size={30} />
             <div>
               <strong>স্থির সঞ্চয় নেই</strong>
-              <p>সঞ্চয় এখানে দেখুন</p>
+              <p>সাপ্তাহিক ২% লাভ</p>
             </div>
+            <button onClick={() => setShowFixedDeposit(true)}>
+              বিস্তারিত দেখুন
+            </button>
           </div>
         )}
 
@@ -971,6 +836,86 @@ function WorkPage({
           <p>দৈনিক চক্রবৃদ্ধি হিসাব</p>
         </div>
       </section>
+
+      {showFixedDeposit && !fixedDeposit && (
+        <div
+          className="purchase-modal-backdrop"
+          onClick={() => setShowFixedDeposit(false)}
+        >
+          <section
+            aria-modal="true"
+            className="purchase-modal fixed-deposit-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="purchase-modal-head">
+              <div>
+                <span>
+                  <Icon name="calendar" size={22} />
+                </span>
+                <div>
+                  <small>৭ দিনের সঞ্চয়</small>
+                  <h2>সঞ্চয় স্থির করুন</h2>
+                </div>
+              </div>
+              <button
+                aria-label="বন্ধ করুন"
+                onClick={() => setShowFixedDeposit(false)}
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </div>
+
+            <div className="fixed-deposit-balance">
+              <small>আবদ্ধ হবে</small>
+              <strong>{money(balance)}</strong>
+              <span>সম্পূর্ণ সঞ্চয়</span>
+            </div>
+
+            <div className="fixed-deposit-projection">
+              <div>
+                <small>সাত দিনে লাভ</small>
+                <strong>{money(balance * 0.02)}</strong>
+              </div>
+              <div>
+                <small>মেয়াদশেষে মোট প্রাপ্য</small>
+                <strong>{money(balance * 1.02)}</strong>
+              </div>
+              <div>
+                <small>মেয়াদ ফুরোনোর দিন</small>
+                <strong>{expiryDateFromToday(7)}</strong>
+              </div>
+            </div>
+
+            <div className="fixed-deposit-rules">
+              <h3>স্থির সঞ্চয়ের নিয়মাবলি</h3>
+              <ol>
+              <li>সঞ্চয় আবদ্ধ হবে</li>
+              <li>আগে উত্তোলন নয়</li>
+              <li>২% লাভ যুক্ত</li>
+              <li>নতুন জমা উত্তোলনযোগ্য</li>
+              <li>পরে বাতিল নয়</li>
+              </ol>
+            </div>
+
+            <div className="purchase-actions">
+              <button
+                className="cancel"
+                onClick={() => setShowFixedDeposit(false)}
+              >
+                এখন নয়
+              </button>
+              <button
+                className="confirm"
+                disabled={balance <= 0}
+                onClick={confirmFixedDeposit}
+              >
+                সঞ্চয় স্থির করুন
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   )
 }
@@ -1970,10 +1915,8 @@ export default function App() {
         <HomePage
           action={showToast}
           balance={balance}
-          fixedDeposit={fixedDeposit}
           investment={investment}
           onDeposit={deposit}
-          onFixedDeposit={activateFixedDeposit}
           onNavigate={changePage}
           onPurchase={(selectedPackage) => {
             setBalance((current) => current - selectedPackage.price)
@@ -1997,9 +1940,12 @@ export default function App() {
       )}
       {page === "work" && (
         <WorkPage
+          action={showToast}
+          balance={balance}
           fixedDeposit={fixedDeposit}
           investment={investment}
           onExplore={() => changePage("earn")}
+          onFixedDeposit={activateFixedDeposit}
           transactions={transactions}
         />
       )}
