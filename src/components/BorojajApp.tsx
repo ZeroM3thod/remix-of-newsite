@@ -404,68 +404,6 @@ function HomePage({
           ))}
         </section>
 
-        <section
-          className={
-            fixedDeposit
-              ? "fixed-deposit-card active"
-              : "fixed-deposit-card"
-          }
-        >
-          <div className="fixed-deposit-mark">
-            <Icon name={fixedDeposit ? "check" : "calendar"} size={27} />
-          </div>
-          <div className="fixed-deposit-copy">
-            <span>৭ দিনের সঞ্চয়</span>
-            <h2>
-              {fixedDeposit
-                ? "সঞ্চয় নিরাপদে আবদ্ধ"
-                : "২% নিশ্চিত লাভ"}
-            </h2>
-            <p>
-              {fixedDeposit
-                ? `${money(fixedDeposit.principal)} এখন আবদ্ধ`
-                : "সাপ্তাহিক ২% লাভ"}
-            </p>
-          </div>
-          {fixedDeposit ? (
-            <div className="fixed-deposit-status">
-              <small>মেয়াদ ফুরোবে</small>
-              <strong>{fixedDeposit.expiresAt}</strong>
-            </div>
-          ) : (
-            <button onClick={() => setShowFixedDeposit(true)}>
-              বিস্তারিত দেখুন
-            </button>
-          )}
-        </section>
-
-        {fixedDeposit && (
-          <section className="fixed-deposit-summary">
-            {[
-              ["wallet", "আবদ্ধ মূলধন", money(fixedDeposit.principal)],
-              [
-                "chart",
-                "সাত দিনের লাভ",
-                money(fixedDeposit.profit),
-              ],
-              [
-                "gift",
-                "মেয়াদশেষে প্রাপ্য",
-                money(fixedDeposit.maturityAmount),
-              ],
-              ["calendar", "মুনাফার হার", "২%"],
-            ].map(([icon, label, value]) => (
-              <article key={label}>
-                <span>
-                  <Icon name={icon ?? ""} size={19} />
-                </span>
-                <small>{label}</small>
-                <strong>{value}</strong>
-              </article>
-            ))}
-          </section>
-        )}
-
         {(() => {
           const pkg = investment
             ? investment.package
