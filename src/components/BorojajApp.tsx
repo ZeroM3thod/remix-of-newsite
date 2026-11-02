@@ -318,8 +318,6 @@ function HomePage({
   onDeposit,
   onWithdraw,
   onNavigate,
-  fixedDeposit,
-  onFixedDeposit,
   onPurchase,
 }: {
   action: (message: string) => void
@@ -329,15 +327,12 @@ function HomePage({
   onDeposit: (amount: number) => void
   onWithdraw: (amount: number) => void
   onNavigate: (page: Page) => void
-  fixedDeposit: FixedDeposit | null
-  onFixedDeposit: () => void
   onPurchase: (selectedPackage: VipPackage) => void
 }) {
   const [moneyAction, setMoneyAction] = useState<"deposit" | "withdraw" | null>(
     null,
   )
   const [amount, setAmount] = useState(500)
-  const [showFixedDeposit, setShowFixedDeposit] = useState(false)
   const dailyProfit = investment
     ? (investment.amount * investment.package.dailyRate) / 100
     : 0
@@ -367,15 +362,6 @@ function HomePage({
     }
     setMoneyAction(null)
     setAmount(500)
-  }
-
-  const confirmFixedDeposit = () => {
-    if (balance <= 0) {
-      action("সঞ্চয় নেই")
-      return
-    }
-    onFixedDeposit()
-    setShowFixedDeposit(false)
   }
 
   return (
