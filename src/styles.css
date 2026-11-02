@@ -4287,16 +4287,19 @@ button:active {
 
 .work-savings-status small {
   color: #9b6807;
+  font-size: 10.5px;
 }
 
 .work-savings-status strong {
   color: #5f4210;
+  font-size: 13px;
   font-weight: 700;
 }
 
 .work-savings-status p {
   margin-top: 1px;
   color: #75664a;
+  font-size: 10.5px;
 }
 
 .work-savings-metrics {
