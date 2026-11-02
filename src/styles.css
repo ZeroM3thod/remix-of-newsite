@@ -4272,11 +4272,11 @@ button:active {
 .work-savings-status > span {
   display: grid;
   place-items: center;
-  flex: 0 0 44px;
-  height: 44px;
-  border-radius: 13px;
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: 12px;
   color: white;
-  background: linear-gradient(145deg, #13b579, #078e60);
+  background: linear-gradient(145deg, #e2a51e, #c27b09);
 }
 
 .work-savings-status small,
@@ -4286,30 +4286,30 @@ button:active {
 }
 
 .work-savings-status small {
-  color: #4d7666;
+  color: #9b6807;
 }
 
 .work-savings-status strong {
-  color: #07583d;
+  color: #5f4210;
   font-weight: 700;
 }
 
 .work-savings-status p {
   margin-top: 1px;
-  color: #668074;
+  color: #75664a;
 }
 
 .work-savings-metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 7px;
-  margin-top: 12px;
+  gap: 6px;
+  margin-top: 9px;
 }
 
 .work-savings-metrics > div {
   min-width: 0;
-  padding: 9px;
-  border-radius: 10px;
+  padding: 7px;
+  border-radius: 9px;
   background: rgba(255,255,255,.88);
 }
 
@@ -4320,12 +4320,12 @@ button:active {
 }
 
 .work-savings-metrics small {
-  color: #668074;
+  color: #75664a;
 }
 
 .work-savings-metrics strong {
   margin-top: 2px;
-  color: #08704c;
+  color: #9b6807;
   font-weight: 700;
 }
 
