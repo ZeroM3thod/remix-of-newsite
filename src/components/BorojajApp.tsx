@@ -1509,8 +1509,6 @@ function TeamPage({
               {bengaliNumber(summary.active)} জন
             </strong>
           </div>
-        </div>
-        <div className="team-summary-grid secondary">
           <div>
             <small>ডিপোজিট বোনাস</small>
             <strong>{money(summary.deposit)}</strong>
