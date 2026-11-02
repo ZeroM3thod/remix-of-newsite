@@ -1940,9 +1940,12 @@ export default function App() {
       )}
       {page === "work" && (
         <WorkPage
+          action={showToast}
+          balance={balance}
           fixedDeposit={fixedDeposit}
           investment={investment}
           onExplore={() => changePage("earn")}
+          onFixedDeposit={activateFixedDeposit}
           transactions={transactions}
         />
       )}
