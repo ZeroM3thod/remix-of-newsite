@@ -4840,8 +4840,7 @@ button:active {
     justify-content: center;
   }
 
-  .profile-finance-grid,
-  .work-savings-metrics {
+  .profile-finance-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -5108,8 +5107,7 @@ body,
 
   .fixed-deposit-summary,
   .office-active-vip,
-  .profile-finance-grid,
-  .work-savings-metrics {
+  .profile-finance-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
