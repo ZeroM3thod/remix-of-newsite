@@ -2527,13 +2527,7 @@ button:active {
 }
 
 .team-summary-grid.main {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.team-summary-grid.secondary {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 10px;
-  padding-top: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .team-summary-grid > div {
@@ -5038,6 +5032,15 @@ body,
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
     padding: 8px;
+  }
+
+  .team-summary-grid.main {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 10px;
+  }
+
+  .team-summary-grid.main > div:nth-child(3) {
+    border-right: 0;
   }
 
   .office-actions button {
