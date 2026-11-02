@@ -696,13 +696,13 @@ function WorkPage({
           </div>
         )}
 
-        <div className="work-savings-history">
-          <div className="work-history-title">
-            <h3>সঞ্চয় ইতিহাস</h3>
-            <span>{bengaliNumber(fixedDepositHistory.length)}টি রেকর্ড</span>
-          </div>
-          {fixedDepositHistory.length > 0 ? (
-            fixedDepositHistory.map((item) => (
+        {fixedDepositHistory.length > 0 && (
+          <div className="work-savings-history">
+            <div className="work-history-title">
+              <h3>সঞ্চয় ইতিহাস</h3>
+              <span>{bengaliNumber(fixedDepositHistory.length)}টি রেকর্ড</span>
+            </div>
+            {fixedDepositHistory.map((item) => (
               <article key={item.id}>
                 <span className={item.type}>
                   <Icon
@@ -718,11 +718,9 @@ function WorkPage({
                   {item.type === "credit" ? "+" : "−"} {money(item.amount)}
                 </b>
               </article>
-            ))
-          ) : (
-            <p className="work-history-empty">কোনো রেকর্ড নেই</p>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="package-section">
