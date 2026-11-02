@@ -5034,6 +5034,15 @@ body,
     padding: 8px;
   }
 
+  .team-summary-grid.main {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 10px;
+  }
+
+  .team-summary-grid.main > div:nth-child(3) {
+    border-right: 0;
+  }
+
   .office-actions button {
     min-height: 68px;
   }
