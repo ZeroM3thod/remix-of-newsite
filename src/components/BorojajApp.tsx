@@ -564,16 +564,33 @@ function HomePage({
 }
 
 function WorkPage({
+  action,
+  balance,
   investment,
   fixedDeposit,
   transactions,
   onExplore,
+  onFixedDeposit,
 }: {
+  action: (message: string) => void
+  balance: number
   investment: ActiveInvestment | null
   fixedDeposit: FixedDeposit | null
   transactions: DashboardTransaction[]
   onExplore: () => void
+  onFixedDeposit: () => void
 }) {
+  const [showFixedDeposit, setShowFixedDeposit] = useState(false)
+
+  const confirmFixedDeposit = () => {
+    if (balance <= 0) {
+      action("সঞ্চয় নেই")
+      return
+    }
+    onFixedDeposit()
+    setShowFixedDeposit(false)
+  }
+
   const dailyRate = investment ? investment.package.dailyRate / 100 : 0
   const dailyRows = investment
     ? Array.from({ length: investment.package.durationDays }, (_, index) => {
@@ -816,6 +833,86 @@ function WorkPage({
           <p>দৈনিক চক্রবৃদ্ধি হিসাব</p>
         </div>
       </section>
+
+      {showFixedDeposit && !fixedDeposit && (
+        <div
+          className="purchase-modal-backdrop"
+          onClick={() => setShowFixedDeposit(false)}
+        >
+          <section
+            aria-modal="true"
+            className="purchase-modal fixed-deposit-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="purchase-modal-head">
+              <div>
+                <span>
+                  <Icon name="calendar" size={22} />
+                </span>
+                <div>
+                  <small>৭ দিনের সঞ্চয়</small>
+                  <h2>সঞ্চয় স্থির করুন</h2>
+                </div>
+              </div>
+              <button
+                aria-label="বন্ধ করুন"
+                onClick={() => setShowFixedDeposit(false)}
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </div>
+
+            <div className="fixed-deposit-balance">
+              <small>আবদ্ধ হবে</small>
+              <strong>{money(balance)}</strong>
+              <span>সম্পূর্ণ সঞ্চয়</span>
+            </div>
+
+            <div className="fixed-deposit-projection">
+              <div>
+                <small>সাত দিনে লাভ</small>
+                <strong>{money(balance * 0.02)}</strong>
+              </div>
+              <div>
+                <small>মেয়াদশেষে মোট প্রাপ্য</small>
+                <strong>{money(balance * 1.02)}</strong>
+              </div>
+              <div>
+                <small>মেয়াদ ফুরোনোর দিন</small>
+                <strong>{expiryDateFromToday(7)}</strong>
+              </div>
+            </div>
+
+            <div className="fixed-deposit-rules">
+              <h3>স্থির সঞ্চয়ের নিয়মাবলি</h3>
+              <ol>
+              <li>সঞ্চয় আবদ্ধ হবে</li>
+              <li>আগে উত্তোলন নয়</li>
+              <li>২% লাভ যুক্ত</li>
+              <li>নতুন জমা উত্তোলনযোগ্য</li>
+              <li>পরে বাতিল নয়</li>
+              </ol>
+            </div>
+
+            <div className="purchase-actions">
+              <button
+                className="cancel"
+                onClick={() => setShowFixedDeposit(false)}
+              >
+                এখন নয়
+              </button>
+              <button
+                className="confirm"
+                disabled={balance <= 0}
+                onClick={confirmFixedDeposit}
+              >
+                সঞ্চয় স্থির করুন
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </main>
   )
 }
