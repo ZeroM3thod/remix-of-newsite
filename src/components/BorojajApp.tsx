@@ -757,8 +757,11 @@ function WorkPage({
             <Icon name="calendar" size={30} />
             <div>
               <strong>স্থির সঞ্চয় নেই</strong>
-              <p>সঞ্চয় এখানে দেখুন</p>
+              <p>সাপ্তাহিক ২% লাভ</p>
             </div>
+            <button onClick={() => setShowFixedDeposit(true)}>
+              বিস্তারিত দেখুন
+            </button>
           </div>
         )}
 
@@ -1912,10 +1915,8 @@ export default function App() {
         <HomePage
           action={showToast}
           balance={balance}
-          fixedDeposit={fixedDeposit}
           investment={investment}
           onDeposit={deposit}
-          onFixedDeposit={activateFixedDeposit}
           onNavigate={changePage}
           onPurchase={(selectedPackage) => {
             setBalance((current) => current - selectedPackage.price)
