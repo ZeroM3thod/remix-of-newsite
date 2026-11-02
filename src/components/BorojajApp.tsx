@@ -638,75 +638,6 @@ function WorkPage({
         </div>
       </section>
 
-      <section className="package-section">
-        <div className="package-heading">
-          <div>
-            <span>
-              <Icon name="wallet" size={21} />
-            </span>
-            <div>
-                <h2>সক্রিয় প্যাকেজ</h2>
-              <p>পুঁজি ও লাভ</p>
-            </div>
-          </div>
-          {investment && <b>চলমান</b>}
-        </div>
-
-        {investment ? (
-          <>
-            <article className="active-package-card">
-              <div className="active-package-head">
-                <span>
-                  <Icon name="check" size={21} />
-                </span>
-                <div>
-                  <h3>{investment.package.name}</h3>
-                  <small>
-                    {bengaliNumber(investment.package.durationDays)} দিনের মেয়াদ
-                  </small>
-                </div>
-                <b>সক্রিয়</b>
-              </div>
-              <div className="active-package-metrics">
-              {[
-                ["প্যাকেজ মূল্য", money(investment.amount)],
-                [
-                  "দৈনিক হার",
-                  `${bengaliNumber(investment.package.dailyRate)}%`,
-                ],
-                ["দৈনিক লাভ", money(firstDayProfit)],
-                ["মোট লাভ", money(termProfit)],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <small>{label}</small>
-                  <strong>{value}</strong>
-                </div>
-              ))}
-              </div>
-              <div className="active-package-dates">
-                <div>
-                  <small>শুরুর তারিখ</small>
-                  <strong>{investment.startedAt}</strong>
-                </div>
-                <div>
-                  <small>শেষ তারিখ</small>
-                  <strong>{investment.expiresAt}</strong>
-                </div>
-              </div>
-            </article>
-          </>
-        ) : (
-          <div className="investment-empty">
-            <span>
-              <Icon name="work" size={42} />
-            </span>
-            <h2>প্যাকেজ সক্রিয় নয়</h2>
-            <p>প্যাকেজ বেছে নিন</p>
-            <button onClick={onExplore}>প্যাকেজ বেছে নিন</button>
-          </div>
-        )}
-      </section>
-
       <section className="work-savings-card">
         <div className="package-heading">
           <div>
@@ -792,6 +723,75 @@ function WorkPage({
             <p className="work-history-empty">কোনো রেকর্ড নেই</p>
           )}
         </div>
+      </section>
+
+      <section className="package-section">
+        <div className="package-heading">
+          <div>
+            <span>
+              <Icon name="wallet" size={21} />
+            </span>
+            <div>
+                <h2>সক্রিয় প্যাকেজ</h2>
+              <p>পুঁজি ও লাভ</p>
+            </div>
+          </div>
+          {investment && <b>চলমান</b>}
+        </div>
+
+        {investment ? (
+          <>
+            <article className="active-package-card">
+              <div className="active-package-head">
+                <span>
+                  <Icon name="check" size={21} />
+                </span>
+                <div>
+                  <h3>{investment.package.name}</h3>
+                  <small>
+                    {bengaliNumber(investment.package.durationDays)} দিনের মেয়াদ
+                  </small>
+                </div>
+                <b>সক্রিয়</b>
+              </div>
+              <div className="active-package-metrics">
+              {[
+                ["প্যাকেজ মূল্য", money(investment.amount)],
+                [
+                  "দৈনিক হার",
+                  `${bengaliNumber(investment.package.dailyRate)}%`,
+                ],
+                ["দৈনিক লাভ", money(firstDayProfit)],
+                ["মোট লাভ", money(termProfit)],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <small>{label}</small>
+                  <strong>{value}</strong>
+                </div>
+              ))}
+              </div>
+              <div className="active-package-dates">
+                <div>
+                  <small>শুরুর তারিখ</small>
+                  <strong>{investment.startedAt}</strong>
+                </div>
+                <div>
+                  <small>শেষ তারিখ</small>
+                  <strong>{investment.expiresAt}</strong>
+                </div>
+              </div>
+            </article>
+          </>
+        ) : (
+          <div className="investment-empty">
+            <span>
+              <Icon name="work" size={42} />
+            </span>
+            <h2>প্যাকেজ সক্রিয় নয়</h2>
+            <p>প্যাকেজ বেছে নিন</p>
+            <button onClick={onExplore}>প্যাকেজ বেছে নিন</button>
+          </div>
+        )}
       </section>
 
       {investment && (
