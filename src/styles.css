@@ -63,6 +63,14 @@
 
 :root {
   --radius: 0.625rem;
+  --withdraw-success: oklch(0.55 0.12 165);
+  --withdraw-success-soft: oklch(0.94 0.055 165);
+  --withdraw-success-halo: oklch(0.98 0.02 165);
+  --withdraw-action: oklch(0.46 0.18 259);
+  --withdraw-action-foreground: oklch(1 0 0);
+  --withdraw-fee: oklch(0.53 0.18 5);
+  --withdraw-overlay: oklch(0.19 0.04 260 / 65%);
+  --withdraw-dialog-shadow: 0 18px 60px oklch(0.15 0.04 260 / 25%);
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -5611,4 +5619,31 @@ body,
 
 .office-amount-field > div > input:only-child {
   grid-column: 1 / -1;
+}
+
+.withdraw-success-overlay { z-index: 110; background: var(--withdraw-overlay); backdrop-filter: blur(5px); }
+.withdraw-success-dialog {
+  position: fixed; z-index: 111; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: min(430px, calc(100% - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto;
+  padding: 28px; border-radius: 28px; background: var(--card); color: var(--card-foreground);
+  box-shadow: var(--withdraw-dialog-shadow); text-align: center; font-family: 'FN Mahin Rafid', 'Noto Serif Bengali', serif;
+}
+.withdraw-success-icon { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 22px; border: 5px solid var(--withdraw-success-halo); border-radius: 50%; background: var(--withdraw-success-soft); color: var(--withdraw-success); }
+.withdraw-success-icon svg { border-radius: 50%; background: var(--withdraw-success); color: var(--withdraw-action-foreground); width: 32px; height: 32px; padding: 6px; }
+.withdraw-success-title { font-size: 22px; font-weight: 700; line-height: 1.4; letter-spacing: 0; margin: 0 0 8px; }
+.withdraw-success-description { font-size: 15px; font-style: italic; line-height: 1.5; color: var(--muted-foreground); margin: 0 0 22px; }
+.withdraw-success-details { padding: 14px 16px; border: 1px solid var(--border); border-radius: 20px; background: var(--muted); margin: 0 0 20px; }
+.withdraw-success-details > div { display: flex; justify-content: space-between; gap: 12px; text-align: left; padding: 4px 0; font-size: 15px; line-height: 1.5; }
+.withdraw-success-details dt { color: var(--muted-foreground); }
+.withdraw-success-details dd { font-weight: 700; text-align: right; overflow-wrap: anywhere; margin: 0; }
+.withdraw-success-details .fee dd { color: var(--withdraw-fee); }
+.withdraw-success-details .net { border-top: 1px solid var(--border); margin-top: 5px; padding-top: 8px; font-weight: 700; }
+.withdraw-success-details .net dd { color: var(--withdraw-success); }
+.withdraw-success-details .account dd { color: var(--withdraw-action); }
+.withdraw-success-home { width: 100%; height: auto; min-height: 48px; padding: 12px; border-radius: 14px; white-space: normal; background: var(--withdraw-action); color: var(--withdraw-action-foreground); font-family: inherit; font-size: 17px; font-weight: 700; }
+.withdraw-success-home:hover { background: var(--withdraw-action); filter: brightness(1.08); }
+@media (max-width: 420px) {
+  .withdraw-success-dialog { padding: 22px 20px; }
+  .withdraw-success-title { font-size: 20px; }
+  .withdraw-success-details > div { font-size: 14px; }
 }
