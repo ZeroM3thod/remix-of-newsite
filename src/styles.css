@@ -4815,6 +4815,7 @@ button:active {
 .app .page-content p { font-size: 13px; }
 .app .page-content small { font-size: 13px; }
 .app .page-content button,
+.app .page-content .menu-list a,
 .app .page-content label { font-size: 13px; }
 .app .page-content article > b,
 .app .page-content article > strong { font-size: 14px; }
@@ -4928,7 +4929,8 @@ button:active {
   line-height: 1.45;
 }
 
-.app .page-content button {
+.app .page-content button,
+.app .page-content .menu-list a {
   font-size: clamp(13px, 3.5vw, 15px);
 }
 
@@ -5002,7 +5004,8 @@ body,
   font-size: clamp(12px, 3.3vw, 13.5px);
 }
 
-.app .page-content button {
+.app .page-content button,
+.app .page-content .menu-list a {
   font-size: clamp(12.5px, 3.4vw, 14.5px);
 }
 
