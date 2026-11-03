@@ -1429,7 +1429,6 @@ function TeamPage({
   }
   const [level, setLevel] = useState<keyof typeof teamRates>(1)
   const [sub, setSub] = useState<null | "members" | "salary">(null)
-  const directActive = teamData[1].active
   const liveStats = {
     l1: teamData[1].active,
     l2: teamData[2].active,
