@@ -1689,38 +1689,119 @@ function TeamPage({
       )}
 
       {sub === "salary" && (
-        <section className="salary-list">
-          <p className="salary-note">
-            সক্রিয় সরাসরি রেফারেল: <strong>{bengaliNumber(directActive)} জন</strong>
-          </p>
-          {salaryTiers.map((tier) => {
-            const best = [...salaryTiers].reverse().find((t) => directActive >= t.refs)
-            const done = best?.refs === tier.refs
-            const passed = !done && directActive >= tier.refs
-            return (
-              <article
-                className={done ? "salary-row team-card done" : "salary-row team-card"}
-                key={tier.refs}
-              >
-                <div>
-                  <strong>{bengaliNumber(tier.refs)} রেফারেল</strong>
-                  <small>{done ? "অর্জিত" : passed ? "উচ্চ স্তরে উন্নীত" : `আর ${bengaliNumber(tier.refs - directActive)} জন`}</small>
-                </div>
-                <div className="salary-side">
-                  <b>{money(tier.salary)}<small>/মাস</small></b>
-                  {done && (
-                    <button
-                      className="salary-claim"
-                      disabled={claimed.length > 0}
-                      onClick={() => claimSalary(tier.refs, tier.salary)}
-                    >
-                      {claimed.length > 0 ? "এই মাসে নেওয়া হয়েছে" : "দাবি করুন"}
-                    </button>
-                  )}
-                </div>
-              </article>
-            )
-          })}
+        <section className="salary-dash">
+          <section className="salary-hero">
+            <div className="salary-hero-top">
+              <div className="salary-hero-title">
+                <span className="salary-hero-badge">টিম লিডারশিপ ড্যাশবোর্ড</span>
+                <h2>আপনার বর্তমান অর্জন</h2>
+              </div>
+              <span className="salary-hero-trophy" aria-hidden="true">🏆</span>
+            </div>
+            <div className="salary-hero-stats main">
+              <div>
+                <small>বর্তমান স্যালারি র‍্যাংক</small>
+                <strong>
+                  {bestTier ? `${bestTier.icon} ${bestTier.rank}` : "লিডার নন"}
+                </strong>
+              </div>
+              <div>
+                <small>অর্জিত মাসিক বেতন</small>
+                <strong className="gain">
+                  {bestTier ? `${money(bestTier.amount)} / মাস` : "—"}
+                </strong>
+              </div>
+            </div>
+            <div className="salary-hero-stats three">
+              <div>
+                <small>মোট রেফারেল</small>
+                <strong>{bengaliNumber(teamMemberTotal)} জন</strong>
+              </div>
+              <div>
+                <small>ভিআইপি ১+ সক্রিয়</small>
+                <strong className="amber">
+                  {bengaliNumber(liveStats.l1 + liveStats.l2 + liveStats.l3)} জন
+                </strong>
+              </div>
+              <div>
+                <small>টিম ডিপোজিট</small>
+                <strong className="gain">{money(teamDepositTotal)}</strong>
+              </div>
+            </div>
+          </section>
+
+          <aside className="salary-notice">
+            <b aria-hidden="true">💡</b>
+            <p>
+              <strong>বেতনের নিয়ম:</strong> স্যালারি কাউন্টে কেবল{" "}
+              <strong>ভিআইপি ১ বা তার ওপরের</strong> সদস্যরা গণ্য হবেন।{" "}
+              <em>(ভিআইপি ০ গ্রহণযোগ্য নয়)</em>।
+            </p>
+          </aside>
+
+          <div className="salary-head">
+            <h3>মাসিক বেতন স্কেল ও শর্তাবলী</h3>
+            <span>মোট {bengaliNumber(salaryTiers.length)}টি স্কেল</span>
+          </div>
+
+          <div className="salary-tiers">
+            {salaryTiers.map((tier, index) => {
+              const l1Pass = liveStats.l1 >= tier.req.l1
+              const l2Pass = liveStats.l2 >= tier.req.l2
+              const l3Pass = liveStats.l3 >= tier.req.l3
+              const canClaim = l1Pass && l2Pass && l3Pass
+              const isClaimed = claimedTier === index
+              return (
+                <article
+                  className={canClaim ? "salary-tier unlocked" : "salary-tier"}
+                  key={tier.rank}
+                >
+                  <div className="salary-tier-top">
+                    <div>
+                      <b>
+                        {tier.icon} {tier.rank}
+                      </b>
+                      <strong>
+                        {money(tier.amount)} <small>/ মাস</small>
+                      </strong>
+                    </div>
+                    {canClaim ? (
+                      <button
+                        className="salary-claim"
+                        disabled={claimedTier !== null}
+                        onClick={() => claimSalary(index, tier.rank, tier.amount)}
+                      >
+                        {isClaimed ? "নেওয়া হয়েছে" : "দাবি করুন"}
+                      </button>
+                    ) : (
+                      <button className="salary-locked" disabled>
+                        🔒 অপূর্ণাঙ্গ
+                      </button>
+                    )}
+                  </div>
+                  <div className="salary-tier-reqs">
+                    <span>শর্তাবলী:</span>
+                    <span className={`req-pill ${l1Pass ? "pass" : ""}`}>
+                      লেভেল ১: {bengaliNumber(liveStats.l1)}/
+                      {bengaliNumber(tier.req.l1)} {l1Pass ? "✓" : ""}
+                    </span>
+                    {tier.req.l2 > 0 && (
+                      <span className={`req-pill ${l2Pass ? "pass" : ""}`}>
+                        লেভেল ২: {bengaliNumber(liveStats.l2)}/
+                        {bengaliNumber(tier.req.l2)} {l2Pass ? "✓" : ""}
+                      </span>
+                    )}
+                    {tier.req.l3 > 0 && (
+                      <span className={`req-pill ${l3Pass ? "pass" : ""}`}>
+                        লেভেল ৩: {bengaliNumber(liveStats.l3)}/
+                        {bengaliNumber(tier.req.l3)} {l3Pass ? "✓" : ""}
+                      </span>
+                    )}
+                  </div>
+                </article>
+              )
+            })}
+          </div>
         </section>
       )}
     </main>
