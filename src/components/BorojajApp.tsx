@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useRef, useState, type ReactNode } from "react"
 import {
   normalizeDigits,
   validWalletNumber,
@@ -2162,9 +2162,11 @@ export default function App() {
     return () => window.clearTimeout(timer)
   }, [fixedDeposit])
 
+  const toastTimer = useRef<number | null>(null)
   const showToast = (message: string) => {
     setToast(message)
-    window.setTimeout(() => setToast(""), 2200)
+    if (toastTimer.current) window.clearTimeout(toastTimer.current)
+    toastTimer.current = window.setTimeout(() => setToast(""), 2200)
   }
 
   const changePage = (next: Page) => {
