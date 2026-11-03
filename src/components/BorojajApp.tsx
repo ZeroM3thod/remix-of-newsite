@@ -1804,6 +1804,311 @@ function PlaceholderPage({ page }: { page: Page }) {
   )
 }
 
+function WithdrawPage({
+  action,
+  balance,
+  wallets,
+  withdrawals,
+  onAddWallet,
+  onWithdraw,
+}: {
+  action: (message: string) => void
+  balance: number
+  wallets: SavedWallet[]
+  withdrawals: WithdrawalRecord[]
+  onAddWallet: (wallet: Omit<SavedWallet, "id">) => void
+  onWithdraw: (
+    amount: number,
+    fee: number,
+    net: number,
+    wallet: SavedWallet,
+  ) => void
+}) {
+  const [showAddWallet, setShowAddWallet] = useState(false)
+  const [provider, setProvider] = useState<WalletProvider>("bkash")
+  const [account, setAccount] = useState("")
+  const [walletPassword, setWalletPassword] = useState("")
+  const [selectedWallet, setSelectedWallet] = useState<number | null>(null)
+  const [amount, setAmount] = useState(500)
+  const [password, setPassword] = useState("")
+
+  const selected =
+    wallets.find((wallet) => wallet.id === selectedWallet) ?? wallets[0]
+  const totals = withdrawalTotals(amount)
+
+  const submitWallet = () => {
+    if (!validWalletNumber(provider, account)) {
+      action("সঠিক অ্যাকাউন্ট নম্বর লিখুন")
+      return
+    }
+    if (walletPassword.length < 4) {
+      action("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন")
+      return
+    }
+    onAddWallet({
+      provider,
+      account: normalizeDigits(account),
+      password: walletPassword,
+    })
+    setShowAddWallet(false)
+    setAccount("")
+    setWalletPassword("")
+  }
+
+  const submitWithdrawal = () => {
+    if (!selected) {
+      action("আগে একটি ওয়ালেট যোগ করুন")
+      return
+    }
+    if (!validWithdrawal(amount, balance)) {
+      action(
+        amount > balance
+          ? "পর্যাপ্ত সঞ্চয় নেই"
+          : "সর্বনিম্ন ৳৫০০ উত্তোলন করতে হবে",
+      )
+      return
+    }
+    if (password !== selected.password) {
+      action("ওয়ালেট পাসওয়ার্ড সঠিক নয়")
+      return
+    }
+    onWithdraw(amount, totals.fee, totals.net, selected)
+    setPassword("")
+    setAmount(500)
+  }
+
+  return (
+    <main className="home-page office-page page-content withdraw-page">
+      <section className="office-hero withdraw-hero">
+        <div className="office-welcome">
+          <span>অর্থ উত্তোলন</span>
+          <h1>আপনার ওয়ালেটে টাকা পাঠান</h1>
+          <p>বিকাশ, নগদ, রকেট ও উপায়ে উত্তোলন করুন</p>
+        </div>
+        <div className="office-balance">
+          <span>
+            <Icon name="wallet" size={26} />
+          </span>
+          <div>
+            <small>ব্যবহারযোগ্য সঞ্চয়</small>
+            <strong>{money(balance)}</strong>
+          </div>
+        </div>
+      </section>
+
+      <section className="withdraw-wallets">
+        <div className="withdraw-section-head">
+          <h2>সংরক্ষিত ওয়ালেট</h2>
+          <button onClick={() => setShowAddWallet(true)}>
+            <Icon name="deposit" size={15} />
+            ওয়ালেট যোগ করুন
+          </button>
+        </div>
+        {wallets.length === 0 ? (
+          <button
+            className="withdraw-empty"
+            onClick={() => setShowAddWallet(true)}
+          >
+            <Icon name="wallet" size={28} />
+            <b>কোনো ওয়ালেট সংরক্ষিত নেই</b>
+            <small>উত্তোলনের জন্য আগে একটি ওয়ালেট যোগ করুন</small>
+          </button>
+        ) : (
+          <div className="withdraw-wallet-list">
+            {wallets.map((wallet) => {
+              const meta = walletProviders.find(
+                (item) => item.id === wallet.provider,
+              )!
+              const active = selected?.id === wallet.id
+              return (
+                <button
+                  className={active ? "withdraw-wallet active" : "withdraw-wallet"}
+                  key={wallet.id}
+                  onClick={() => setSelectedWallet(wallet.id)}
+                >
+                  <span className={`wallet-provider ${wallet.provider}`}>
+                    {meta.name.slice(0, 1)}
+                  </span>
+                  <div>
+                    <strong>{meta.name}</strong>
+                    <small>{toBengaliDigits(wallet.account)}</small>
+                  </div>
+                  {active && (
+                    <span className="wallet-check">
+                      <Icon name="check" size={15} />
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        )}
+      </section>
+
+      <section className="withdraw-form">
+        <label className="office-amount-field">
+          <span>উত্তোলনের পরিমাণ</span>
+          <div>
+            <b>৳</b>
+            <input
+              inputMode="numeric"
+              onChange={(event) =>
+                setAmount(parseBengaliNumber(event.target.value))
+              }
+              type="text"
+              value={toBengaliDigits(amount)}
+            />
+          </div>
+        </label>
+        <div className="office-amount-presets">
+          {[500, 1000, 2500].map((preset) => (
+            <button key={preset} onClick={() => setAmount(preset)}>
+              {money(preset)}
+            </button>
+          ))}
+        </div>
+        <div className="withdraw-totals">
+          <div>
+            <span>উত্তোলনের পরিমাণ</span>
+            <b>{money(amount)}</b>
+          </div>
+          <div>
+            <span>সার্ভিস চার্জ (৬%)</span>
+            <b>{money(totals.fee)}</b>
+          </div>
+          <div className="net">
+            <span>ওয়ালেটে পাবেন</span>
+            <b>{money(totals.net)}</b>
+          </div>
+        </div>
+        <label className="office-amount-field">
+          <span>ওয়ালেট পাসওয়ার্ড</span>
+          <div>
+            <input
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="পাসওয়ার্ড লিখুন"
+              type="password"
+              value={password}
+            />
+          </div>
+        </label>
+        <button className="withdraw-submit" onClick={submitWithdrawal}>
+          উত্তোলন নিশ্চিত করুন
+        </button>
+        <small className="withdraw-note">
+          সর্বনিম্ন উত্তোলন ৳৫০০ • ৬% সার্ভিস চার্জ প্রযোজ্য
+        </small>
+      </section>
+
+      {withdrawals.length > 0 && (
+        <section className="withdraw-history">
+          <h2>উত্তোলনের রেকর্ড</h2>
+          {withdrawals.map((record) => {
+            const meta = walletProviders.find(
+              (item) => item.id === record.provider,
+            )!
+            return (
+              <article key={record.id}>
+                <span className={`wallet-provider ${record.provider}`}>
+                  {meta.name.slice(0, 1)}
+                </span>
+                <div>
+                  <strong>
+                    {meta.name} • {toBengaliDigits(record.account)}
+                  </strong>
+                  <small>{record.date}</small>
+                </div>
+                <div className="withdraw-record-amount">
+                  <b>{money(record.net)}</b>
+                  <small>{record.status}</small>
+                </div>
+              </article>
+            )
+          })}
+        </section>
+      )}
+
+      {showAddWallet && (
+        <div
+          className="purchase-modal-backdrop"
+          onClick={() => setShowAddWallet(false)}
+        >
+          <section
+            aria-modal="true"
+            className="purchase-modal office-money-modal"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
+            <div className="purchase-modal-head">
+              <div>
+                <span>
+                  <Icon name="wallet" size={22} />
+                </span>
+                <div>
+                  <small>নিরাপদ উত্তোলনের জন্য</small>
+                  <h2>ওয়ালেট যোগ করুন</h2>
+                </div>
+              </div>
+              <button
+                aria-label="বন্ধ করুন"
+                onClick={() => setShowAddWallet(false)}
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </div>
+            <div className="withdraw-provider-grid">
+              {walletProviders.map((item) => (
+                <button
+                  className={provider === item.id ? "active" : ""}
+                  key={item.id}
+                  onClick={() => setProvider(item.id)}
+                >
+                  <b>{item.name}</b>
+                  <small>{item.english}</small>
+                </button>
+              ))}
+            </div>
+            <label className="office-amount-field">
+              <span>অ্যাকাউন্ট নম্বর</span>
+              <div>
+                <input
+                  inputMode="numeric"
+                  onChange={(event) => setAccount(event.target.value)}
+                  placeholder="01XXXXXXXXX"
+                  type="text"
+                  value={account}
+                />
+              </div>
+            </label>
+            <label className="office-amount-field">
+              <span>ওয়ালেট পাসওয়ার্ড</span>
+              <div>
+                <input
+                  onChange={(event) => setWalletPassword(event.target.value)}
+                  placeholder="উত্তোলনের সময় লাগবে"
+                  type="password"
+                  value={walletPassword}
+                />
+              </div>
+            </label>
+            <div className="purchase-actions">
+              <button
+                className="cancel"
+                onClick={() => setShowAddWallet(false)}
+              >
+                বাতিল করুন
+              </button>
+              <button className="confirm" onClick={submitWallet}>
+                সংরক্ষণ করুন
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
+    </main>
+  )
+}
+
 export default function App() {
   const [page, setPage] = useState<Page>("home")
   const [toast, setToast] = useState("")
