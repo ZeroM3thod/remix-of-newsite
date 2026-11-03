@@ -2344,7 +2344,7 @@ export default function App() {
           transactions={transactions}
         />
       )}
-      {!["home", "work", "earn", "team", "profile"].includes(page) && (
+      {!["home", "work", "earn", "team", "profile", "withdraw"].includes(page) && (
         <PlaceholderPage page={page} />
       )}
       {toast && (
