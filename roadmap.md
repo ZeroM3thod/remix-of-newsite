@@ -2,4 +2,6 @@
 - [x] Add private saved wallets with new Borojaj wallet password and provider selection.
 - [x] Verify wallet saving, selection, password checks, and withdrawal flow.
 - [x] Keep wallets and withdrawals as temporary design-preview state; database persistence is intentionally removed.
+- [ ] Add the reference-style withdrawal success dialog and verify it.
+- [ ] Export the project source into one file with Repomix.
 - [ ] Remove the Cloud database permanently (workspace admin must use More → Database → Manage → Settings → Remove Database; deletion is irreversible).

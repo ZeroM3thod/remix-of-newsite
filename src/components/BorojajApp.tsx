@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogPortal, DialogOverlay, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { Content as DialogPrimitiveContent } from "@radix-ui/react-dialog"
 import {
   normalizeDigits,
   validWalletNumber,
@@ -1817,11 +1820,13 @@ function WithdrawPage({
   withdrawals,
   onAddWallet,
   onWithdraw,
+  onNavigate,
 }: {
   action: (message: string) => void
   balance: number
   wallets: SavedWallet[]
   withdrawals: WithdrawalRecord[]
+  onNavigate: (page: Page) => void
   onAddWallet: (wallet: Omit<SavedWallet, "id">) => void
   onWithdraw: (
     amount: number,
@@ -1837,6 +1842,7 @@ function WithdrawPage({
   const [selectedWallet, setSelectedWallet] = useState<number | null>(null)
   const [amount, setAmount] = useState(500)
   const [password, setPassword] = useState("")
+  const [confirmation, setConfirmation] = useState<Pick<WithdrawalRecord, "amount" | "fee" | "net" | "provider" | "account"> | null>(null)
 
   const selected =
     wallets.find((wallet) => wallet.id === selectedWallet) ?? wallets[0]
@@ -1879,6 +1885,7 @@ function WithdrawPage({
       return
     }
     onWithdraw(amount, totals.fee, totals.net, selected)
+    setConfirmation({ amount, fee: totals.fee, net: totals.net, provider: selected.provider, account: selected.account })
     setPassword("")
     setAmount(500)
   }
@@ -1924,7 +1931,8 @@ function WithdrawPage({
             {wallets.map((wallet) => {
               const meta = walletProviders.find(
                 (item) => item.id === wallet.provider,
-              )!
+              )
+              if (!meta) return null
               const active = selected?.id === wallet.id
               return (
                 <button
@@ -2012,7 +2020,8 @@ function WithdrawPage({
           {withdrawals.map((record) => {
             const meta = walletProviders.find(
               (item) => item.id === record.provider,
-            )!
+            )
+            if (!meta) return null
             return (
               <article key={record.id}>
                 <span className={`wallet-provider ${record.provider}`}>
@@ -2033,6 +2042,27 @@ function WithdrawPage({
           })}
         </section>
       )}
+
+      <Dialog open={confirmation !== null} onOpenChange={(open) => { if (!open) setConfirmation(null) }}>
+        <DialogPortal>
+          <DialogOverlay className="withdraw-success-overlay" />
+          <DialogPrimitiveContent className="withdraw-success-dialog">
+            <span className="withdraw-success-icon" aria-hidden="true"><Icon name="check" size={25} strokeWidth={3} /></span>
+            <DialogTitle className="withdraw-success-title">আবেদন সফলভাবে গৃহীত হয়েছে!</DialogTitle>
+            <DialogDescription className="withdraw-success-description">আপনার উত্তোলনের অনুরোধটি প্রক্রিয়াধীন রয়েছে, খুব শীঘ্রই অর্থ একাউন্টে পৌঁছাবে।</DialogDescription>
+            {confirmation && (
+              <dl className="withdraw-success-details">
+                <div><dt>পেমেন্ট মাধ্যম:</dt><dd>{walletProviders.find((item) => item.id === confirmation.provider)?.name}</dd></div>
+                <div><dt>উত্তোলনের পরিমাণ:</dt><dd>{money(confirmation.amount)}</dd></div>
+                <div className="fee"><dt>প্রসেসিং ফি (৬%):</dt><dd>{money(confirmation.fee)}</dd></div>
+                <div className="net"><dt>প্রাপ্ত নিট অর্থ:</dt><dd>{money(confirmation.net)}</dd></div>
+                <div className="account"><dt>গ্রাহক নম্বর:</dt><dd>{toBengaliDigits(confirmation.account)}</dd></div>
+              </dl>
+            )}
+            <Button className="withdraw-success-home" onClick={() => { setConfirmation(null); onNavigate("home") }}>মূল পাতায় ফিরে যান</Button>
+          </DialogPrimitiveContent>
+        </DialogPortal>
+      </Dialog>
 
       {showAddWallet && (
         <div
@@ -2229,7 +2259,6 @@ export default function App() {
       },
       ...current,
     ])
-    showToast("উত্তোলনের আবেদন গৃহীত হয়েছে")
   }
 
   const activateFixedDeposit = () => {
@@ -2334,6 +2363,7 @@ export default function App() {
           withdrawals={withdrawals}
           onAddWallet={addWallet}
           onWithdraw={confirmWithdrawal}
+          onNavigate={changePage}
         />
       )}
       {page === "profile" && (
