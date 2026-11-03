@@ -2330,6 +2330,34 @@ function WithdrawPage({
         <small className="withdraw-note">
           সর্বনিম্ন উত্তোলন ৳৫০০ • ৬% সার্ভিস চার্জ প্রযোজ্য
         </small>
+        <div className="withdraw-rules">
+          <h3>
+            <Icon name="clock" size={13} />
+            <span>উত্তোলনের নিয়ম</span>
+          </h3>
+          <ul>
+            <li>
+              <span>উত্তোলন সময়</span>
+              <b>সকাল ১০টা – দুপুর ৩টা</b>
+            </li>
+            <li>
+              <span>প্রসেসিং সময়</span>
+              <b>১ ঘণ্টা – ২৪ ঘণ্টা</b>
+            </li>
+            <li>
+              <span>সর্বনিম্ন উত্তোলন</span>
+              <b>৳ ৫০০.০০</b>
+            </li>
+            <li>
+              <span>সার্ভিস চার্জ</span>
+              <b>৬%</b>
+            </li>
+            <li>
+              <span>দৈনিক সীমা</span>
+              <b>৩ টি আবেদন</b>
+            </li>
+          </ul>
+        </div>
       </section>
 
       {withdrawals.length > 0 && (
