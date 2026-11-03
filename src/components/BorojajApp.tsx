@@ -1699,11 +1699,13 @@ function TeamPage({
 
 function ProfilePage({
   action,
+  onNavigate,
 }: {
   action: (message: string) => void
   balance: number
   fixedDeposit: FixedDeposit | null
   investment: ActiveInvestment | null
+  onNavigate: (page: Page) => void
   transactions: DashboardTransaction[]
 }) {
   const stats = [
@@ -2318,12 +2320,23 @@ export default function App() {
           onClaim={(amount) => setBalance((current) => current + amount)}
         />
       )}
+      {page === "withdraw" && (
+        <WithdrawPage
+          action={showToast}
+          balance={balance}
+          wallets={wallets}
+          withdrawals={withdrawals}
+          onAddWallet={addWallet}
+          onWithdraw={confirmWithdrawal}
+        />
+      )}
       {page === "profile" && (
         <ProfilePage
           action={showToast}
           balance={balance}
           fixedDeposit={fixedDeposit}
           investment={investment}
+          onNavigate={changePage}
           transactions={transactions}
         />
       )}
