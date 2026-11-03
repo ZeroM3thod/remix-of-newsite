@@ -1,3 +1,4 @@
-- [ ] Add withdrawal page matching existing website and uploaded reference.
-- [ ] Add private saved wallets with new Borojaj wallet password and provider selection.
-- [ ] Verify wallet saving, selection, password checks, and withdrawal flow.
+- [x] Add withdrawal page matching existing website and uploaded reference.
+- [x] Add private saved wallets with new Borojaj wallet password and provider selection.
+- [x] Verify wallet saving, selection, password checks, and withdrawal flow.
+- [ ] Persist wallets/withdrawals to the database with user login (currently in-app state like the rest of the app).
