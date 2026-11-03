@@ -1399,12 +1399,14 @@ const levelTotals = (level: keyof typeof teamRates) => {
 }
 
 const salaryTiers = [
-  { refs: 5, salary: 500 },
-  { refs: 10, salary: 1200 },
-  { refs: 20, salary: 2500 },
-  { refs: 35, salary: 4500 },
-  { refs: 50, salary: 7000 },
-  { refs: 100, salary: 15000 },
+  { rank: "ব্রোঞ্জ লিডার", icon: "🥉", amount: 300, req: { l1: 3, l2: 0, l3: 0 } },
+  { rank: "সিলভার লিডার", icon: "🥈", amount: 700, req: { l1: 5, l2: 0, l3: 0 } },
+  { rank: "গোল্ড লিডার", icon: "🥇", amount: 1200, req: { l1: 7, l2: 3, l3: 0 } },
+  { rank: "প্লাটিনাম লিডার", icon: "💎", amount: 2500, req: { l1: 10, l2: 5, l3: 0 } },
+  { rank: "ডায়মন্ড লিডার", icon: "👑", amount: 5000, req: { l1: 15, l2: 10, l3: 5 } },
+  { rank: "ক্রাউন ডিরেক্টর", icon: "⭐", amount: 10000, req: { l1: 30, l2: 20, l3: 10 } },
+  { rank: "এম্বাসেডর", icon: "🚀", amount: 25000, req: { l1: 60, l2: 40, l3: 20 } },
+  { rank: "প্রেসিডেন্সিয়াল লিডার", icon: "🏛️", amount: 50000, req: { l1: 120, l2: 80, l3: 50 } },
 ]
 
 function TeamPage({
@@ -1414,16 +1416,40 @@ function TeamPage({
   action: (message: string) => void
   onClaim: (amount: number) => void
 }) {
-  const [claimed, setClaimed] = useState<number[]>([])
-  const claimSalary = (refs: number, salary: number) => {
-    if (claimed.length > 0) return
-    setClaimed((current) => [...current, refs])
+  const [claimedTier, setClaimedTier] = useState<number | null>(null)
+  const [salarySuccess, setSalarySuccess] = useState<{
+    rank: string
+    amount: number
+  } | null>(null)
+  const claimSalary = (tierIndex: number, rank: string, salary: number) => {
+    if (claimedTier !== null) return
+    setClaimedTier(tierIndex)
     onClaim(salary)
-    action(`${money(salary)} বেতন ব্যালেন্সে যোগ হয়েছে`)
+    setSalarySuccess({ rank, amount: salary })
   }
   const [level, setLevel] = useState<keyof typeof teamRates>(1)
   const [sub, setSub] = useState<null | "members" | "salary">(null)
-  const directActive = teamData[1].active
+  const liveStats = {
+    l1: teamData[1].active,
+    l2: teamData[2].active,
+    l3: teamData[3].active,
+  }
+  const teamDepositTotal = ([1, 2, 3] as const).reduce(
+    (sum, item) => sum + teamData[item].teamDeposit,
+    0,
+  )
+  const teamMemberTotal = ([1, 2, 3] as const).reduce(
+    (sum, item) => sum + teamData[item].members,
+    0,
+  )
+  const bestTier = [...salaryTiers]
+    .reverse()
+    .find(
+      (tier) =>
+        liveStats.l1 >= tier.req.l1 &&
+        liveStats.l2 >= tier.req.l2 &&
+        liveStats.l3 >= tier.req.l3,
+    )
   const data = teamData[level]
   const totals = levelTotals(level)
   const summary = ([1, 2, 3] as const).reduce(
@@ -1662,40 +1688,162 @@ function TeamPage({
       )}
 
       {sub === "salary" && (
-        <section className="salary-list">
-          <p className="salary-note">
-            সক্রিয় সরাসরি রেফারেল: <strong>{bengaliNumber(directActive)} জন</strong>
-          </p>
-          {salaryTiers.map((tier) => {
-            const best = [...salaryTiers].reverse().find((t) => directActive >= t.refs)
-            const done = best?.refs === tier.refs
-            const passed = !done && directActive >= tier.refs
-            return (
-              <article
-                className={done ? "salary-row team-card done" : "salary-row team-card"}
-                key={tier.refs}
-              >
-                <div>
-                  <strong>{bengaliNumber(tier.refs)} রেফারেল</strong>
-                  <small>{done ? "অর্জিত" : passed ? "উচ্চ স্তরে উন্নীত" : `আর ${bengaliNumber(tier.refs - directActive)} জন`}</small>
-                </div>
-                <div className="salary-side">
-                  <b>{money(tier.salary)}<small>/মাস</small></b>
-                  {done && (
-                    <button
-                      className="salary-claim"
-                      disabled={claimed.length > 0}
-                      onClick={() => claimSalary(tier.refs, tier.salary)}
-                    >
-                      {claimed.length > 0 ? "এই মাসে নেওয়া হয়েছে" : "দাবি করুন"}
-                    </button>
-                  )}
-                </div>
-              </article>
-            )
-          })}
+        <section className="salary-dash">
+          <section className="salary-hero">
+            <div className="salary-hero-top">
+              <div className="salary-hero-title">
+                <span className="salary-hero-badge">টিম লিডারশিপ ড্যাশবোর্ড</span>
+                <h2>আপনার বর্তমান অর্জন</h2>
+              </div>
+              <span className="salary-hero-trophy" aria-hidden="true">🏆</span>
+            </div>
+            <div className="salary-hero-stats main">
+              <div>
+                <small>বর্তমান স্যালারি র‍্যাংক</small>
+                <strong>
+                  {bestTier ? `${bestTier.icon} ${bestTier.rank}` : "লিডার নন"}
+                </strong>
+              </div>
+              <div>
+                <small>অর্জিত মাসিক বেতন</small>
+                <strong className="gain">
+                  {bestTier ? `${money(bestTier.amount)} / মাস` : "—"}
+                </strong>
+              </div>
+            </div>
+            <div className="salary-hero-stats three">
+              <div>
+                <small>মোট রেফারেল</small>
+                <strong>{bengaliNumber(teamMemberTotal)} জন</strong>
+              </div>
+              <div>
+                <small>ভিআইপি ১+ সক্রিয়</small>
+                <strong className="amber">
+                  {bengaliNumber(liveStats.l1 + liveStats.l2 + liveStats.l3)} জন
+                </strong>
+              </div>
+              <div>
+                <small>টিম ডিপোজিট</small>
+                <strong className="gain">{money(teamDepositTotal)}</strong>
+              </div>
+            </div>
+          </section>
+
+          <aside className="salary-notice">
+            <b aria-hidden="true">💡</b>
+            <p>
+              <strong>বেতনের নিয়ম:</strong> স্যালারি কাউন্টে কেবল{" "}
+              <strong>ভিআইপি ১ বা তার ওপরের</strong> সদস্যরা গণ্য হবেন।{" "}
+              <em>(ভিআইপি ০ গ্রহণযোগ্য নয়)</em>।
+            </p>
+          </aside>
+
+          <div className="salary-head">
+            <h3>মাসিক বেতন স্কেল ও শর্তাবলী</h3>
+            <span>মোট {bengaliNumber(salaryTiers.length)}টি স্কেল</span>
+          </div>
+
+          <div className="salary-tiers">
+            {salaryTiers.map((tier, index) => {
+              const l1Pass = liveStats.l1 >= tier.req.l1
+              const l2Pass = liveStats.l2 >= tier.req.l2
+              const l3Pass = liveStats.l3 >= tier.req.l3
+              const canClaim = l1Pass && l2Pass && l3Pass
+              const isClaimed = claimedTier === index
+              return (
+                <article
+                  className={canClaim ? "salary-tier unlocked" : "salary-tier"}
+                  key={tier.rank}
+                >
+                  <div className="salary-tier-top">
+                    <div>
+                      <b>
+                        {tier.icon} {tier.rank}
+                      </b>
+                      <strong>
+                        {money(tier.amount)} <small>/ মাস</small>
+                      </strong>
+                    </div>
+                    {canClaim ? (
+                      <button
+                        className="salary-claim"
+                        disabled={claimedTier !== null}
+                        onClick={() => claimSalary(index, tier.rank, tier.amount)}
+                      >
+                        {isClaimed ? "নেওয়া হয়েছে" : "দাবি করুন"}
+                      </button>
+                    ) : (
+                      <button className="salary-locked" disabled>
+                        🔒 অপূর্ণাঙ্গ
+                      </button>
+                    )}
+                  </div>
+                  <div className="salary-tier-reqs">
+                    <span>শর্তাবলী:</span>
+                    <span className={`req-pill ${l1Pass ? "pass" : ""}`}>
+                      লেভেল ১: {bengaliNumber(liveStats.l1)}/
+                      {bengaliNumber(tier.req.l1)} {l1Pass ? "✓" : ""}
+                    </span>
+                    {tier.req.l2 > 0 && (
+                      <span className={`req-pill ${l2Pass ? "pass" : ""}`}>
+                        লেভেল ২: {bengaliNumber(liveStats.l2)}/
+                        {bengaliNumber(tier.req.l2)} {l2Pass ? "✓" : ""}
+                      </span>
+                    )}
+                    {tier.req.l3 > 0 && (
+                      <span className={`req-pill ${l3Pass ? "pass" : ""}`}>
+                        লেভেল ৩: {bengaliNumber(liveStats.l3)}/
+                        {bengaliNumber(tier.req.l3)} {l3Pass ? "✓" : ""}
+                      </span>
+                    )}
+                  </div>
+                </article>
+              )
+            })}
+          </div>
         </section>
       )}
+
+      <Dialog
+        open={salarySuccess !== null}
+        onOpenChange={(open) => {
+          if (!open) setSalarySuccess(null)
+        }}
+      >
+        <DialogPortal>
+          <DialogOverlay className="withdraw-success-overlay" />
+          <DialogPrimitiveContent className="withdraw-success-dialog">
+            <span className="withdraw-success-icon" aria-hidden="true">
+              <Icon name="check" size={25} strokeWidth={3} />
+            </span>
+            <DialogTitle className="withdraw-success-title">
+              আবেদন সফল হয়েছে!
+            </DialogTitle>
+            <DialogDescription className="withdraw-success-description">
+              বেতনের আবেদন সফলভাবে গৃহীত হয়েছে। এডমিন ভেরিফিকেশন শেষে আপনার
+              ওয়ালেটে জমা হবে।
+            </DialogDescription>
+            {salarySuccess && (
+              <dl className="withdraw-success-details">
+                <div>
+                  <dt>লিডার র‍্যাংক:</dt>
+                  <dd>{salarySuccess.rank}</dd>
+                </div>
+                <div className="net">
+                  <dt>অর্জিত মাসিক বেতন:</dt>
+                  <dd>{money(salarySuccess.amount)}</dd>
+                </div>
+              </dl>
+            )}
+            <Button
+              className="withdraw-success-home"
+              onClick={() => setSalarySuccess(null)}
+            >
+              ঠিক আছে
+            </Button>
+          </DialogPrimitiveContent>
+        </DialogPortal>
+      </Dialog>
     </main>
   )
 }
