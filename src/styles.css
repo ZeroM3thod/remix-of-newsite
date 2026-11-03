@@ -5756,3 +5756,15 @@ body,
 .ps-gender button.active { background: #0755bf; color: #fff; border-color: #0755bf; }
 .ps-note { font-size: 12px; color: #7a879c; margin: 0; }
 .ps-save { width: 100%; border: 0; border-radius: 12px; padding: 12px; background: linear-gradient(135deg, #0755bf, #08b7df); color: #fff; font: inherit; font-weight: 700; }
+.sp-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.sp-summary span { display: block; font-size: 11px; color: #7a879c; }
+.sp-summary b { color: #0755bf; font-size: 14px; }
+.sp-list { padding: 4px 14px; }
+.sp-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #e6eef8; }
+.sp-row:last-child { border-bottom: 0; }
+.sp-row strong { display: block; font-size: 13px; color: #10284f; }
+.sp-row small { font-size: 11px; color: #7a879c; }
+.sp-row b.plus { color: #10a35a; } .sp-row b.minus { color: #e0202f; }
+.sp-download { display: grid; justify-items: center; gap: 4px; text-align: center; }
+.sp-app-icon { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(135deg, #0755bf, #08b7df); color: #fff; font-size: 30px; font-weight: 800; }
+.ps-save.sp-secondary { margin-top: 10px; background: #fff; color: #0755bf; border: 1px solid #0755bf; }
