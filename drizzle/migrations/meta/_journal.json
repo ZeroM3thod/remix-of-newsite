@@ -1,13 +1,5 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1793684892205,
-      "tag": "0000_private_saved_wallets",
-      "breakpoints": true
-    }
-  ]
+  "entries": []
 }
