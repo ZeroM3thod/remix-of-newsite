@@ -1914,6 +1914,7 @@ function ProfilePage({
                   ? onNavigate("work")
                   : action(`${label} নির্বাচিত হয়েছে`)
             }
+          >
             <span>
               <Icon name={icon ?? ""} size={34} />
             </span>
