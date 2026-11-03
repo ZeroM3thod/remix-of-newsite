@@ -1399,12 +1399,14 @@ const levelTotals = (level: keyof typeof teamRates) => {
 }
 
 const salaryTiers = [
-  { refs: 5, salary: 500 },
-  { refs: 10, salary: 1200 },
-  { refs: 20, salary: 2500 },
-  { refs: 35, salary: 4500 },
-  { refs: 50, salary: 7000 },
-  { refs: 100, salary: 15000 },
+  { rank: "ব্রোঞ্জ লিডার", icon: "🥉", amount: 300, req: { l1: 3, l2: 0, l3: 0 } },
+  { rank: "সিলভার লিডার", icon: "🥈", amount: 700, req: { l1: 5, l2: 0, l3: 0 } },
+  { rank: "গোল্ড লিডার", icon: "🥇", amount: 1200, req: { l1: 7, l2: 3, l3: 0 } },
+  { rank: "প্লাটিনাম লিডার", icon: "💎", amount: 2500, req: { l1: 10, l2: 5, l3: 0 } },
+  { rank: "ডায়মন্ড লিডার", icon: "👑", amount: 5000, req: { l1: 15, l2: 10, l3: 5 } },
+  { rank: "ক্রাউন ডিরেক্টর", icon: "⭐", amount: 10000, req: { l1: 30, l2: 20, l3: 10 } },
+  { rank: "এম্বাসেডর", icon: "🚀", amount: 25000, req: { l1: 60, l2: 40, l3: 20 } },
+  { rank: "প্রেসিডেন্সিয়াল লিডার", icon: "🏛️", amount: 50000, req: { l1: 120, l2: 80, l3: 50 } },
 ]
 
 function TeamPage({
@@ -1414,16 +1416,41 @@ function TeamPage({
   action: (message: string) => void
   onClaim: (amount: number) => void
 }) {
-  const [claimed, setClaimed] = useState<number[]>([])
-  const claimSalary = (refs: number, salary: number) => {
-    if (claimed.length > 0) return
-    setClaimed((current) => [...current, refs])
+  const [claimedTier, setClaimedTier] = useState<number | null>(null)
+  const [salarySuccess, setSalarySuccess] = useState<{
+    rank: string
+    amount: number
+  } | null>(null)
+  const claimSalary = (tierIndex: number, rank: string, salary: number) => {
+    if (claimedTier !== null) return
+    setClaimedTier(tierIndex)
     onClaim(salary)
-    action(`${money(salary)} বেতন ব্যালেন্সে যোগ হয়েছে`)
+    setSalarySuccess({ rank, amount: salary })
   }
   const [level, setLevel] = useState<keyof typeof teamRates>(1)
   const [sub, setSub] = useState<null | "members" | "salary">(null)
   const directActive = teamData[1].active
+  const liveStats = {
+    l1: teamData[1].active,
+    l2: teamData[2].active,
+    l3: teamData[3].active,
+  }
+  const teamDepositTotal = ([1, 2, 3] as const).reduce(
+    (sum, item) => sum + teamData[item].teamDeposit,
+    0,
+  )
+  const teamMemberTotal = ([1, 2, 3] as const).reduce(
+    (sum, item) => sum + teamData[item].members,
+    0,
+  )
+  const bestTier = [...salaryTiers]
+    .reverse()
+    .find(
+      (tier) =>
+        liveStats.l1 >= tier.req.l1 &&
+        liveStats.l2 >= tier.req.l2 &&
+        liveStats.l3 >= tier.req.l3,
+    )
   const data = teamData[level]
   const totals = levelTotals(level)
   const summary = ([1, 2, 3] as const).reduce(
