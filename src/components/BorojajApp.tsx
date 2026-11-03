@@ -1761,7 +1761,11 @@ function ProfilePage({
         ].map(([icon, label]) => (
           <button
             key={label}
-            onClick={() => action(`${label} নির্বাচিত হয়েছে`)}
+            onClick={() =>
+              label === "উত্তোলন"
+                ? onNavigate("withdraw")
+                : action(`${label} নির্বাচিত হয়েছে`)
+            }
           >
             <span>
               <Icon name={icon ?? ""} size={34} />
