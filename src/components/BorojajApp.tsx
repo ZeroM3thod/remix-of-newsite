@@ -1932,7 +1932,6 @@ function ProfilePage({
         ))}
       </section>
       <button
-      <button
         className="chat-button"
         aria-label="সহায়তা"
         onClick={() => action("টেলিগ্রাম সহায়তা খোলা হয়েছে")}
