@@ -5734,3 +5734,7 @@ body,
   .withdraw-success-title { font-size: 20px; }
   .withdraw-success-details > div { font-size: 14px; }
 }
+
+.menu-list button.logout-row {
+  color: #e0202f;
+}
