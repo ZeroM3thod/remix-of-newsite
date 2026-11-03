@@ -318,6 +318,24 @@ type FixedDeposit = {
   maturesAt: number
 }
 
+type SavedWallet = {
+  id: number
+  provider: WalletProvider
+  account: string
+  password: string
+}
+
+type WithdrawalRecord = {
+  id: number
+  amount: number
+  fee: number
+  net: number
+  provider: WalletProvider
+  account: string
+  date: string
+  status: string
+}
+
 function HomePage({
   action,
   balance,
