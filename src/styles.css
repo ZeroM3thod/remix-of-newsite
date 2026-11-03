@@ -5768,3 +5768,38 @@ body,
 .sp-download { display: grid; justify-items: center; gap: 4px; text-align: center; }
 .sp-app-icon { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(135deg, #0755bf, #08b7df); color: #fff; font-size: 30px; font-weight: 800; }
 .ps-save.sp-secondary { margin-top: 10px; background: #fff; color: #0755bf; border: 1px solid #0755bf; }
+
+.withdraw-rules {
+  margin-top: 2px;
+  padding: 10px 11px 5px;
+  border: 1px dashed #e6c76a;
+  border-radius: 12px;
+  background: #fffdf6;
+}
+.withdraw-rules h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #6b5313;
+}
+.withdraw-rules h3 svg { color: #c27b09; }
+.withdraw-rules ul { list-style: none; margin: 0; padding: 0; }
+.withdraw-rules li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 5px 0;
+  border-top: 1px dashed #f0d99e;
+  font-size: 11px;
+  color: #8a7648;
+}
+.withdraw-rules li:first-child { border-top: 0; }
+.withdraw-rules li b {
+  color: #5c470e;
+  font-weight: 800;
+  text-align: right;
+}
