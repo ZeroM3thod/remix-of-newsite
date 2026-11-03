@@ -1864,11 +1864,11 @@ function ProfilePage({
   ]
   const menu = [
     "সাধারণ হিসাবপত্র",
-    "জমার অর্ডার",
-    "কমিশন",
-    "লভ্যাংশ",
-    "উত্তোলন",
-    "স্টকের মূল্যায়ন",
+    "প্রোফাইল সেটিংস",
+    "পাসওয়ার্ড পরিবর্তন",
+    "উত্তোলন পাসওয়ার্ড",
+    "প্যাকেজ কেনার রেকর্ড",
+    "লাভের রেকর্ড",
     "অ্যাপ ডাউনলোড",
   ]
 
@@ -1903,16 +1903,17 @@ function ProfilePage({
           ["deposit", "জমা করুন"],
           ["withdraw", "উত্তোলন"],
           ["users", "সঙ্গীগণ"],
-          ["settings", "বিন্যাস"],
+          ["work", "কর্মক্ষেত্র"],
         ].map(([icon, label]) => (
           <button
             key={label}
             onClick={() =>
               label === "উত্তোলন"
                 ? onNavigate("withdraw")
-                : action(`${label} নির্বাচিত হয়েছে`)
-            }
-          >
+                ? onNavigate("withdraw")
+                : label === "কর্মক্ষেত্র"
+                  ? onNavigate("work")
+                : }
             <span>
               <Icon name={icon ?? ""} size={34} />
             </span>
