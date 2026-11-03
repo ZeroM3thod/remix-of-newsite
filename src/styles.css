@@ -5738,3 +5738,21 @@ body,
 .menu-list button.logout-row {
   color: #e0202f;
 }
+
+.profile-settings { padding-bottom: 96px; }
+.profile-settings .ps-back { background: none; border: 0; color: #0755bf; font-weight: 600; padding: 4px 0; }
+.ps-title { font-size: 18px; color: #0b2b5c; margin: 6px 0 12px; }
+.ps-card { background: #fff; border-radius: 14px; padding: 14px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(7, 85, 191, 0.08); }
+.ps-avatar-wrap { display: flex; justify-content: center; }
+.ps-avatar { display: grid; justify-items: center; gap: 8px; cursor: pointer; }
+.ps-avatar img, .ps-avatar span { width: 84px; height: 84px; border-radius: 50%; object-fit: cover; display: grid; place-items: center; background: linear-gradient(135deg, #0755bf, #08b7df); color: #fff; font-size: 32px; border: 3px solid #f0d99e; }
+.ps-avatar b { color: #0755bf; font-size: 13px; }
+.ps-field { display: grid; gap: 6px; margin-bottom: 12px; }
+.ps-field > span { font-size: 13px; color: #4a5d7a; }
+.ps-field input { border: 1px solid #d6e2f5; border-radius: 10px; padding: 10px 12px; font: inherit; font-size: 14px; background: #f7faff; color: #0b2b5c; }
+.ps-field input:disabled { background: #eef1f6; color: #7a879c; cursor: not-allowed; }
+.ps-gender { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ps-gender button { border: 1px solid #d6e2f5; background: #f7faff; border-radius: 10px; padding: 9px 0; color: #0b2b5c; font: inherit; }
+.ps-gender button.active { background: #0755bf; color: #fff; border-color: #0755bf; }
+.ps-note { font-size: 12px; color: #7a879c; margin: 0; }
+.ps-save { width: 100%; border: 0; border-radius: 12px; padding: 12px; background: linear-gradient(135deg, #0755bf, #08b7df); color: #fff; font: inherit; font-weight: 700; }
