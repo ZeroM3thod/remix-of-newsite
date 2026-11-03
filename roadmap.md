@@ -1,0 +1,3 @@
+- [ ] Add withdrawal page matching existing website and uploaded reference.
+- [ ] Add private saved wallets with new Borojaj wallet password and provider selection.
+- [ ] Verify wallet saving, selection, password checks, and withdrawal flow.

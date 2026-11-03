@@ -14,13 +14,93 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      saved_wallets: {
+        Row: {
+          account_number: string
+          created_at: string
+          failed_attempts: number
+          id: string
+          locked_until: string | null
+          password_hash: string
+          provider: string
+          user_id: string
+        }
+        Insert: {
+          account_number: string
+          created_at?: string
+          failed_attempts?: number
+          id?: string
+          locked_until?: string | null
+          password_hash: string
+          provider: string
+          user_id: string
+        }
+        Update: {
+          account_number?: string
+          created_at?: string
+          failed_attempts?: number
+          id?: string
+          locked_until?: string | null
+          password_hash?: string
+          provider?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withdrawal_requests: {
+        Row: {
+          amount: number
+          created_at: string
+          fee: number
+          id: string
+          net_amount: number
+          status: string
+          user_id: string
+          wallet_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          fee: number
+          id?: string
+          net_amount: number
+          status?: string
+          user_id: string
+          wallet_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          fee?: number
+          id?: string
+          net_amount?: number
+          status?: string
+          user_id?: string
+          wallet_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "withdrawal_requests_wallet_id_fkey"
+            columns: ["wallet_id"]
+            isOneToOne: false
+            referencedRelation: "saved_wallets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      request_wallet_withdrawal: {
+        Args: { p_amount: number; p_password: string; p_wallet: string }
+        Returns: Json
+      }
+      save_payment_wallet: {
+        Args: { p_account: string; p_password: string; p_provider: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
