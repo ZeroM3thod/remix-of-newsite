@@ -495,7 +495,8 @@ button:active {
   margin-top: 11px;
 }
 
-.menu-list button {
+.menu-list button,
+.menu-list a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3264,7 +3265,8 @@ button:active {
     height: 54px;
   }
 
-  .menu-list button {
+  .menu-list button,
+  .menu-list a {
     min-height: 45px;
   }
 
