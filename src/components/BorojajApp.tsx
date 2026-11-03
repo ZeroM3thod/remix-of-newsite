@@ -1910,10 +1910,10 @@ function ProfilePage({
             onClick={() =>
               label === "উত্তোলন"
                 ? onNavigate("withdraw")
-                ? onNavigate("withdraw")
                 : label === "কর্মক্ষেত্র"
                   ? onNavigate("work")
-                : }
+                  : action(`${label} নির্বাচিত হয়েছে`)
+            }
             <span>
               <Icon name={icon ?? ""} size={34} />
             </span>
