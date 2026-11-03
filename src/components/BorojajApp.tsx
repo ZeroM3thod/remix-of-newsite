@@ -1837,10 +1837,7 @@ function TeamPage({
             )}
             <Button
               className="withdraw-success-home"
-              onClick={() => {
-                setSalarySuccess(null)
-                setSub(null)
-              }}
+              onClick={() => setSalarySuccess(null)}
             >
               ঠিক আছে
             </Button>
