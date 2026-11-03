@@ -519,32 +519,48 @@ button:active {
   line-height: 1;
 }
 
-.chat-button {
+.chat-buttons {
   position: fixed;
   z-index: 10;
   right: 16px;
   bottom: 88px;
   display: grid;
+  gap: 9px;
+  justify-items: center;
+}
+
+.chat-button {
+  display: grid;
   place-items: center;
-  width: 57px;
-  height: 57px;
+  width: 46px;
+  height: 46px;
+  padding: 0;
   border: 0;
   border-radius: 50%;
   color: #087ee2;
   background: white;
-  box-shadow: 0 4px 16px rgba(0, 102, 185, .35);
+  box-shadow: 0 4px 14px rgba(0, 102, 185, .32);
+  cursor: pointer;
 }
 
 .chat-button span {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 33px;
+  height: 33px;
   border-radius: 50%;
   color: white;
-  background: #229ed9;
   line-height: 1;
 }
+
+.chat-button.telegram span {
+  background: #229ed9;
+}
+
+.chat-button.whatsapp span {
+  background: #25d366;
+}
+
 
 
 .office-page {
@@ -3272,7 +3288,7 @@ button:active {
     padding-bottom: 72px;
   }
 
-  .chat-button {
+  .chat-buttons {
     bottom: 82px;
   }
 }
