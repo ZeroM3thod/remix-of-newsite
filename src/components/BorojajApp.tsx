@@ -1,6 +1,14 @@
 import { useEffect, useState, type ReactNode } from "react"
+import {
+  normalizeDigits,
+  validWalletNumber,
+  validWithdrawal,
+  walletProviders,
+  withdrawalTotals,
+  type WalletProvider,
+} from "@/lib/withdrawal"
 
-type Page = "home" | "work" | "earn" | "team" | "profile"
+type Page = "home" | "work" | "earn" | "team" | "profile" | "withdraw"
 
 function Icon({
   name,
@@ -391,7 +399,7 @@ function HomePage({
         <section className="office-actions" aria-label="দ্রুত কার্যক্রম">
           {[
             ["deposit", "সঞ্চয় জমা", () => setMoneyAction("deposit")],
-            ["withdraw", "অর্থ উত্তোলন", () => setMoneyAction("withdraw")],
+            ["withdraw", "অর্থ উত্তোলন", () => onNavigate("withdraw")],
             ["chart", "প্যাকেজ কিনুন", () => onNavigate("earn")],
             ["work", "কর্মক্ষেত্র", () => onNavigate("work")],
           ].map(([icon, label, onClick]) => (
