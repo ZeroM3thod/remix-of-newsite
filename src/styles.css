@@ -5358,5 +5358,59 @@ body,
   content: '';
 }
 
+/* Compact referral records: identity, aligned details, then income breakdown. */
+.referral-list {
+  --referral-surface: var(--card);
+  --referral-ink: var(--card-foreground);
+  --referral-muted: var(--muted-foreground);
+  --referral-line: var(--border);
+  --referral-positive: oklch(0.46 0.12 160);
+  --referral-positive-soft: oklch(0.97 0.025 160);
+  display: grid;
+  gap: 10px;
+}
+
+.referral-member {
+  min-width: 0;
+  border: 1px solid var(--referral-line);
+  border-radius: 8px;
+  background: var(--referral-surface);
+  color: var(--referral-ink);
+  overflow: hidden;
+}
+
+.referral-member-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+}
+
+.referral-mobile { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.referral-avatar { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: var(--muted); color: var(--referral-muted); }
+.referral-label { display: block; font-size: 11px; color: var(--referral-muted); }
+.referral-mobile strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+.referral-status { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--referral-muted); flex-shrink: 0; }
+.referral-status i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.referral-status.is-active { color: var(--referral-positive); }
+
+.referral-details { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0 14px 12px; gap: 10px; }
+.referral-details > div { min-width: 0; }
+.referral-details dt { color: var(--referral-muted); font-size: 11px; margin-bottom: 3px; }
+.referral-details dd { margin: 0; font-size: 13px; font-weight: 700; overflow-wrap: anywhere; }
+.referral-earned dd { color: var(--referral-positive); }
+.referral-member-footer { display: flex; flex-wrap: wrap; gap: 5px 16px; padding: 8px 14px; border-top: 1px solid var(--referral-line); background: var(--muted); color: var(--referral-muted); font-size: 10.5px; }
+.referral-member-footer b { color: var(--referral-ink); font-weight: 600; margin-left: 3px; }
+.referral-joined { margin-left: auto; }
+
+@media (max-width: 600px) {
+  .referral-details { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+  .referral-member-header { padding: 10px 12px; }
+  .referral-details { padding: 0 12px 10px; }
+  .referral-member-footer { padding: 7px 12px; }
+  .referral-joined { flex-basis: 100%; margin-left: 0; }
+}
+
 
 
