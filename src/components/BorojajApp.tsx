@@ -1358,7 +1358,7 @@ const teamData: Record<keyof typeof teamRates, {
 const bengaliNumber = (value: number) =>
   value.toLocaleString("bn-BD", { maximumFractionDigits: 1 })
 
-const toBengaliDigits = (value: number) =>
+const toBengaliDigits = (value: number | string) =>
   String(value).replace(/\d/g, (digit) => "০১২৩৪৫৬৭৮৯"[Number(digit)] ?? digit)
 
 const parseBengaliNumber = (value: string) => {
