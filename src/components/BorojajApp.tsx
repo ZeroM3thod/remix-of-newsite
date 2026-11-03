@@ -487,13 +487,14 @@ function HomePage({
           )
         })()}
 
-        <section className="office-tools">
+        <section className="menu-list" aria-label="অফিসের অন্যান্য কার্যক্রম">
           {[
-            ["users", "সাফল্যের সঙ্গী", "দল ও কমিশন", "team"],
-            ["bell", "বার্তা ও ঘোষণা", "নতুন ঘোষণা নেই", null],
-            ["settings", "নিরাপত্তা ও বিন্যাস", "সুরক্ষা যাচাই করুন", null],
-          ].map(([icon, title, subtitle, destination]) => (
-            <button
+            ["সাফল্যের সঙ্গী", "team"],
+            ["বার্তা ও ঘোষণা", null],
+            ["নিরাপত্তা ও বিন্যাস", null],
+          ].map(([title, destination]) => (
+            <Button
+              variant="ghost"
               key={title}
               onClick={() =>
                 destination
@@ -501,15 +502,9 @@ function HomePage({
                   : action(`${title} শীঘ্রই আসছে`)
               }
             >
-              <span>
-                <Icon name={icon as string} size={21} />
-              </span>
-              <div>
-                <strong>{title}</strong>
-                <small>{subtitle}</small>
-              </div>
-              <b>›</b>
-            </button>
+              <span>{title}</span>
+              <b aria-hidden="true">›</b>
+            </Button>
           ))}
         </section>
       </main>
