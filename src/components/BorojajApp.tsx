@@ -1867,7 +1867,7 @@ function ProfilePage({
     "প্রোফাইল সেটিংস",
     "পাসওয়ার্ড পরিবর্তন",
     "উত্তোলন পাসওয়ার্ড",
-    "প্যাকেজ কেনার রেকর্ড",
+    "টেলিগ্রাম অফিসিয়াল চ্যানেল",
     "লাভের রেকর্ড",
     "অ্যাপ ডাউনলোড",
   ]
@@ -1924,12 +1924,25 @@ function ProfilePage({
       </section>
 
       <section className="menu-list">
-        {menu.map((item) => (
-          <button key={item} onClick={() => action(`${item} শীঘ্রই আসছে`)}>
-            <span>{item}</span>
-            <b>›</b>
-          </button>
-        ))}
+        {menu.map((item) =>
+          item === "টেলিগ্রাম অফিসিয়াল চ্যানেল" ? (
+            <a
+              key={item}
+              className="telegram-channel-link"
+              href="https://t.me/borojaj_official"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span>{item}</span>
+              <b>›</b>
+            </a>
+          ) : (
+            <button key={item} onClick={() => action(`${item} শীঘ্রই আসছে`)}>
+              <span>{item}</span>
+              <b>›</b>
+            </button>
+          ),
+        )}
       </section>
       <div className="chat-buttons">
         <button
