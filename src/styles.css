@@ -538,29 +538,14 @@ button:active {
 .chat-button span {
   display: grid;
   place-items: center;
-  width: 39px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   color: white;
-  background: #0b8eea;
-  letter-spacing: 2px;
+  background: #229ed9;
   line-height: 1;
 }
 
-.chat-button b {
-  position: absolute;
-  top: -3px;
-  right: -1px;
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  color: white;
-  background: #ee1743;
-  font-family: 'Noto Serif Bengali', serif;
-  font-size: 13px;
-}
 
 .office-page {
   display: grid;
