@@ -11,7 +11,7 @@ import {
   type WalletProvider,
 } from "@/lib/withdrawal"
 
-type Page = "home" | "work" | "earn" | "team" | "profile" | "withdraw" | "settings"
+type Page = "home" | "work" | "earn" | "team" | "profile" | "withdraw" | "settings" | "ledger" | "password" | "wpassword" | "profits" | "download"
 
 function Icon({
   name,
@@ -1873,6 +1873,15 @@ function ProfilePage({
     "লগ আউট",
   ]
 
+  const subPages: Record<string, Page> = {
+    "সাধারণ হিসাবপত্র": "ledger",
+    "প্রোফাইল সেটিংস": "settings",
+    "পাসওয়ার্ড পরিবর্তন": "password",
+    "উত্তোলন পাসওয়ার্ড": "wpassword",
+    "লাভের রেকর্ড": "profits",
+    "অ্যাপ ডাউনলোড": "download",
+  }
+
   return (
     <main className="home-page page-content">
       <section className="balance-card">
@@ -1942,8 +1951,8 @@ function ProfilePage({
               key={item}
               className={item === "লগ আউট" ? "logout-row" : undefined}
               onClick={() =>
-                item === "প্রোফাইল সেটিংস"
-                  ? onNavigate("settings")
+                subPages[item]
+                  ? onNavigate(subPages[item])
                   : action(item === "লগ আউট" ? "লগ আউট সফল হয়েছে (ডেমো)" : `${item} নির্বাচিত হয়েছে`)
               }
             >
@@ -2034,6 +2043,76 @@ function ProfileSettingsPage({
         onClick={() => (name.trim() ? action("প্রোফাইল সংরক্ষিত হয়েছে") : action("নাম লিখুন"))}
       >সংরক্ষণ করুন</button>
     </main>
+  )
+}
+
+function SubPageShell({ title, onNavigate, children }: { title: string; onNavigate: (page: Page) => void; children: React.ReactNode }) {
+  return (
+    <main className="home-page page-content profile-settings">
+      <button className="ps-back" onClick={() => onNavigate("profile")}>‹ ফিরে যান</button>
+      <h1 className="ps-title">{title}</h1>
+      {children}
+    </main>
+  )
+}
+
+function PasswordPage({ title, withdrawal, action, onNavigate }: { title: string; withdrawal?: boolean; action: (m: string) => void; onNavigate: (page: Page) => void }) {
+  const [oldPw, setOldPw] = useState("")
+  const [pw, setPw] = useState("")
+  const [pw2, setPw2] = useState("")
+  const submit = () => {
+    if (!oldPw || !pw || !pw2) return action("সব ঘর পূরণ করুন")
+    if (pw.length < 6) return action("নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে")
+    if (pw !== pw2) return action("নতুন পাসওয়ার্ড মিলছে না")
+    setOldPw(""); setPw(""); setPw2("")
+    action(`${title} সফলভাবে পরিবর্তন হয়েছে`)
+  }
+  return (
+    <SubPageShell title={title} onNavigate={onNavigate}>
+      <section className="ps-card">
+        <label className="ps-field"><span>{withdrawal ? "বর্তমান উত্তোলন পাসওয়ার্ড" : "বর্তমান পাসওয়ার্ড"}</span>
+          <input type="password" value={oldPw} onChange={(e) => setOldPw(e.target.value)} placeholder="বর্তমান পাসওয়ার্ড লিখুন" /></label>
+        <label className="ps-field"><span>নতুন পাসওয়ার্ড</span>
+          <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="কমপক্ষে ৬ অক্ষর" /></label>
+        <label className="ps-field"><span>নতুন পাসওয়ার্ড নিশ্চিত করুন</span>
+          <input type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} placeholder="আবার লিখুন" /></label>
+        <p className="ps-note">{withdrawal ? "উত্তোলনের সময় এই পাসওয়ার্ড প্রয়োজন হবে। কারো সাথে শেয়ার করবেন না।" : "নিরাপত্তার জন্য শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।"}</p>
+      </section>
+      <button className="ps-save" onClick={submit}>পরিবর্তন করুন</button>
+    </SubPageShell>
+  )
+}
+
+function RecordListPage({ title, summary, rows, onNavigate }: { title: string; summary: [string, string][]; rows: [string, string, string, boolean][]; onNavigate: (page: Page) => void }) {
+  return (
+    <SubPageShell title={title} onNavigate={onNavigate}>
+      <section className="ps-card sp-summary">
+        {summary.map(([k, v]) => (<div key={k}><span>{k}</span><b>{v}</b></div>))}
+      </section>
+      <section className="ps-card sp-list">
+        {rows.map(([name, date, amt, plus], i) => (
+          <div className="sp-row" key={i}>
+            <div><strong>{name}</strong><small>{date}</small></div>
+            <b className={plus ? "plus" : "minus"}>{amt}</b>
+          </div>
+        ))}
+      </section>
+    </SubPageShell>
+  )
+}
+
+function DownloadPage({ action, onNavigate }: { action: (m: string) => void; onNavigate: (page: Page) => void }) {
+  return (
+    <SubPageShell title="অ্যাপ ডাউনলোড" onNavigate={onNavigate}>
+      <section className="ps-card sp-download">
+        <div className="sp-app-icon">ব</div>
+        <strong>বড়োজাজ অ্যাপ</strong>
+        <small>সংস্করণ ১.০.০ • ১৮ MB</small>
+        <p className="ps-note">দ্রুত ও নিরাপদে আপনার হিসাব পরিচালনা করতে অ্যাপটি ডাউনলোড করুন।</p>
+      </section>
+      <button className="ps-save" onClick={() => action("অ্যান্ড্রয়েড অ্যাপ ডাউনলোড শুরু হয়েছে (ডেমো)")}>অ্যান্ড্রয়েড ডাউনলোড</button>
+      <button className="ps-save sp-secondary" onClick={() => action("iOS সংস্করণ শীঘ্রই আসছে")}>iOS ডাউনলোড</button>
+    </SubPageShell>
   )
 }
 
@@ -2618,7 +2697,38 @@ export default function App() {
       {page === "settings" && (
         <ProfileSettingsPage action={showToast} onNavigate={changePage} />
       )}
-      {!["home", "work", "earn", "team", "profile", "withdraw", "settings"].includes(page) && (
+      {page === "ledger" && (
+        <RecordListPage
+          title="সাধারণ হিসাবপত্র"
+          onNavigate={changePage}
+          summary={[["বর্তমান ব্যালেন্স", `৳ ${balance.toLocaleString("bn-BD")}`], ["মোট জমা", "৳ ২,৬০০"], ["মোট উত্তোলন", "৳ ২০০"]]}
+          rows={[
+            ["জমা (বিকাশ)", "০১ নভেম্বর ২০২৬", "+৳ ১,০০০", true],
+            ["প্যাকেজ ক্রয়", "৩০ অক্টোবর ২০২৬", "-৳ ৫০০", false],
+            ["দৈনিক লাভ", "২৯ অক্টোবর ২০২৬", "+৳ ৪০", true],
+            ["উত্তোলন (নগদ)", "২৫ অক্টোবর ২০২৬", "-৳ ২০০", false],
+            ["জমা (নগদ)", "২০ অক্টোবর ২০২৬", "+৳ ১,৬০০", true],
+          ]}
+        />
+      )}
+      {page === "password" && <PasswordPage title="পাসওয়ার্ড পরিবর্তন" action={showToast} onNavigate={changePage} />}
+      {page === "wpassword" && <PasswordPage title="উত্তোলন পাসওয়ার্ড" withdrawal action={showToast} onNavigate={changePage} />}
+      {page === "profits" && (
+        <RecordListPage
+          title="লাভের রেকর্ড"
+          onNavigate={changePage}
+          summary={[["আজকের লাভ", "৳ ৪০"], ["এই মাসে", "৳ ৮২০"], ["মোট লাভ", "৳ ১,৪০০"]]}
+          rows={[
+            ["ভিআইপি ১ দৈনিক লাভ", "০৩ নভেম্বর ২০২৬", "+৳ ৪০", true],
+            ["ভিআইপি ১ দৈনিক লাভ", "০২ নভেম্বর ২০২৬", "+৳ ৪০", true],
+            ["দলীয় কমিশন", "০২ নভেম্বর ২০২৬", "+৳ ২৪.৫০", true],
+            ["ভিআইপি ১ দৈনিক লাভ", "০১ নভেম্বর ২০২৬", "+৳ ৪০", true],
+            ["২% নিশ্চিত লাভ", "৩১ অক্টোবর ২০২৬", "+৳ ২০", true],
+          ]}
+        />
+      )}
+      {page === "download" && <DownloadPage action={showToast} onNavigate={changePage} />}
+      {!["home", "work", "earn", "team", "profile", "withdraw", "settings", "ledger", "password", "wpassword", "profits", "download"].includes(page) && (
         <PlaceholderPage page={page} />
       )}
       {toast && (
