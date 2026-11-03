@@ -2353,7 +2353,7 @@ function WithdrawPage({
               <b>৬%</b>
             </li>
             <li>
-              <span>দৌনিক সীমা</span>
+              <span>দৈনিক সীমা</span>
               <b>৩ টি আবেদন</b>
             </li>
           </ul>
