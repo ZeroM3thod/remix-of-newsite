@@ -1212,7 +1212,9 @@ function EarnPage({
 }
 
 type TeamMember = {
-  id: string
+  mobile: string
+  id?: string
+  vipLevel?: number
   date: string
   deposit: number
   profit: number
@@ -1236,28 +1238,28 @@ const teamData: Record<keyof typeof teamRates, {
     teamProfit: 4800,
     list: [
       {
-        id: "০১৭৮***৯০১২",
+        mobile: "০১৭৮***৯০১২",
         date: "২৪ অক্টো, ২০২৬",
         deposit: 5000,
         profit: 250,
         active: true,
       },
       {
-        id: "০১৮১***৪৫৬৭",
+        mobile: "০১৮১***৪৫৬৭",
         date: "২২ অক্টো, ২০২৬",
         deposit: 2000,
         profit: 100,
         active: true,
       },
       {
-        id: "০১৯২***১১২২",
+        mobile: "০১৯২***১১২২",
         date: "২০ অক্টো, ২০২৬",
         deposit: 0,
         profit: 0,
         active: false,
       },
       {
-        id: "০১৫৫***৩৩৪৪",
+        mobile: "০১৫৫***৩৩৪৪",
         date: "১৮ অক্টো, ২০২৬",
         deposit: 10000,
         profit: 500,
@@ -1273,21 +1275,21 @@ const teamData: Record<keyof typeof teamRates, {
     teamProfit: 2900,
     list: [
       {
-        id: "০১৬৭***৮৮৯৯",
+        mobile: "০১৬৭***৮৮৯৯",
         date: "২৫ অক্টো, ২০২৬",
         deposit: 3000,
         profit: 150,
         active: true,
       },
       {
-        id: "০১৭৬***০০১১",
+        mobile: "০১৭৬***০০১১",
         date: "২১ অক্টো, ২০২৬",
         deposit: 10000,
         profit: 500,
         active: true,
       },
       {
-        id: "০১৩৩***৭৭৬৬",
+        mobile: "০১৩৩***৭৭৬৬",
         date: "১৯ অক্টো, ২০২৬",
         deposit: 0,
         profit: 0,
@@ -1303,21 +1305,21 @@ const teamData: Record<keyof typeof teamRates, {
     teamProfit: 1500,
     list: [
       {
-        id: "০১৯৯***৫৫৪৪",
+        mobile: "০১৯৯***৫৫৪৪",
         date: "২৬ অক্টো, ২০২৬",
         deposit: 5000,
         profit: 250,
         active: true,
       },
       {
-        id: "০১৭৪***২৩২৩",
+        mobile: "০১৭৪***২৩২৩",
         date: "২৩ অক্টো, ২০২৬",
         deposit: 6318.5,
         profit: 300,
         active: true,
       },
       {
-        id: "০১৮৮***৯৯০০",
+        mobile: "০১৮৮***৯৯০০",
         date: "২০ অক্টো, ২০২৬",
         deposit: 0,
         profit: 0,
@@ -1570,55 +1572,32 @@ function TeamPage({
           </div>
         </div>
 
-        <div className="member-list">
+        <div className="referral-list">
           {data.list.map((member) => {
             const bonus = (member.deposit * teamRates[level]) / 100
             const commission = (member.profit * teamRates[level]) / 100
             return (
-              <article className="member-card team-card" key={member.id}>
-                <div className="member-head">
-                  <span
-                    className={
-                      member.active ? "member-icon active" : "member-icon"
-                    }
-                  >
-                    <Icon name="user" size={21} />
+              <article className="referral-member" key={member.id ?? member.mobile}>
+                <header className="referral-member-header">
+                  <div className="referral-mobile">
+                    <span className="referral-avatar"><Icon name="user" size={18} /></span>
+                    <div><span className="referral-label">মোবাইল নম্বর</span><strong>{member.mobile}</strong></div>
+                  </div>
+                  <span className={`referral-status ${member.active ? "is-active" : ""}`}>
+                    <i />{member.active ? "সক্রিয়" : "নিষ্ক্রিয়"}
                   </span>
-                  <div className="member-identity">
-                    <div>
-                      <strong>{member.id}</strong>
-                      <small
-                        className={member.active ? "status active" : "status"}
-                      >
-                        {member.active ? "সক্রিয়" : "নিষ্ক্রিয়"}
-                      </small>
-                    </div>
-                    <p>যোগদান: {member.date}</p>
-                  </div>
-                  <div className="member-total">
-                    <small>মোট বোনাস</small>
-                    <strong>{money(bonus + commission)}</strong>
-                  </div>
-                </div>
-                <div className="member-income">
-                  <div>
-                    <p>
-                      ডিপোজিট: <strong>{money(member.deposit)}</strong>
-                    </p>
-                    <b>
-                      বোনাস ({bengaliNumber(teamRates[level])}%): {money(bonus)}
-                    </b>
-                  </div>
-                  <div>
-                    <p>
-                      দৈনিক প্রফিট: <strong>{money(member.profit)}</strong>
-                    </p>
-                    <b>
-                      কমিশন ({bengaliNumber(teamRates[level])}%):{" "}
-                      {money(commission)}
-                    </b>
-                  </div>
-                </div>
+                </header>
+                <dl className="referral-details">
+                  <div><dt>সদস্য আইডি</dt><dd>{member.id ?? "তথ্য নেই"}</dd></div>
+                  <div><dt>ভিআইপি নম্বর</dt><dd>{member.vipLevel === undefined ? "তথ্য নেই" : `VIP ${bengaliNumber(member.vipLevel)}`}</dd></div>
+                  <div><dt>মোট ডিপোজিট</dt><dd>{money(member.deposit)}</dd></div>
+                  <div className="referral-earned"><dt>মোট কমিশন</dt><dd>{money(bonus + commission)}</dd></div>
+                </dl>
+                <footer className="referral-member-footer">
+                  <span>ডিপোজিট বোনাস <b>{money(bonus)}</b></span>
+                  <span>প্রফিট কমিশন <b>{money(commission)}</b></span>
+                  <span className="referral-joined">যোগদান: {member.date}</span>
+                </footer>
               </article>
             )
           })}
