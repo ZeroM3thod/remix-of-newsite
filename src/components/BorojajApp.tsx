@@ -1870,6 +1870,7 @@ function ProfilePage({
     "টেলিগ্রাম অফিসিয়াল চ্যানেল",
     "লাভের রেকর্ড",
     "অ্যাপ ডাউনলোড",
+    "লগ আউট",
   ]
 
   return (
@@ -1937,7 +1938,11 @@ function ProfilePage({
               <b>›</b>
             </a>
           ) : (
-            <button key={item} onClick={() => action(`${item} শীঘ্রই আসছে`)}>
+            <button
+              key={item}
+              className={item === "লগ আউট" ? "logout-row" : undefined}
+              onClick={() => action("লগ আউট সফল হয়েছে (ডেমো)")}
+            >
               <span>{item}</span>
               <b>›</b>
             </button>
