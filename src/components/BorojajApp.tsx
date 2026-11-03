@@ -2115,6 +2115,8 @@ export default function App() {
   const [balance, setBalance] = useState(2500)
   const [investment, setInvestment] = useState<ActiveInvestment | null>(null)
   const [fixedDeposit, setFixedDeposit] = useState<FixedDeposit | null>(null)
+  const [wallets, setWallets] = useState<SavedWallet[]>([])
+  const [withdrawals, setWithdrawals] = useState<WithdrawalRecord[]>([])
   const [transactions, setTransactions] = useState<DashboardTransaction[]>([
     {
       id: 1,
@@ -2191,6 +2193,35 @@ export default function App() {
     setBalance((current) => current - amount)
     addTransaction("অর্থ উত্তোলন", amount, "debit")
     showToast(`${money(amount)} উত্তোলন হয়েছে`)
+  }
+
+  const addWallet = (wallet: Omit<SavedWallet, "id">) => {
+    setWallets((current) => [{ id: Date.now(), ...wallet }, ...current])
+    showToast("ওয়ালেট সংরক্ষিত হয়েছে")
+  }
+
+  const confirmWithdrawal = (
+    amount: number,
+    fee: number,
+    net: number,
+    wallet: SavedWallet,
+  ) => {
+    setBalance((current) => current - amount)
+    addTransaction("অর্থ উত্তোলন", amount, "debit")
+    setWithdrawals((current) => [
+      {
+        id: Date.now(),
+        amount,
+        fee,
+        net,
+        provider: wallet.provider,
+        account: wallet.account,
+        date: bengaliDate(new Date()),
+        status: "প্রক্রিয়াধীন",
+      },
+      ...current,
+    ])
+    showToast("উত্তোলনের আবেদন গৃহীত হয়েছে")
   }
 
   const activateFixedDeposit = () => {
