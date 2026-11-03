@@ -1804,6 +1804,50 @@ function TeamPage({
           </div>
         </section>
       )}
+
+      <Dialog
+        open={salarySuccess !== null}
+        onOpenChange={(open) => {
+          if (!open) setSalarySuccess(null)
+        }}
+      >
+        <DialogPortal>
+          <DialogOverlay className="withdraw-success-overlay" />
+          <DialogPrimitiveContent className="withdraw-success-dialog">
+            <span className="withdraw-success-icon" aria-hidden="true">
+              <Icon name="check" size={25} strokeWidth={3} />
+            </span>
+            <DialogTitle className="withdraw-success-title">
+              আবেদন সফল হয়েছে!
+            </DialogTitle>
+            <DialogDescription className="withdraw-success-description">
+              বেতনের আবেদন সফলভাবে গৃহীত হয়েছে। এডমিন ভেরিফিকেশন শেষে আপনার
+              ওয়ালেটে জমা হবে।
+            </DialogDescription>
+            {salarySuccess && (
+              <dl className="withdraw-success-details">
+                <div>
+                  <dt>লিডার র‍্যাংক:</dt>
+                  <dd>{salarySuccess.rank}</dd>
+                </div>
+                <div className="net">
+                  <dt>অর্জিত মাসিক বেতন:</dt>
+                  <dd>{money(salarySuccess.amount)}</dd>
+                </div>
+              </dl>
+            )}
+            <Button
+              className="withdraw-success-home"
+              onClick={() => {
+                setSalarySuccess(null)
+                setSub(null)
+              }}
+            >
+              ঠিক আছে
+            </Button>
+          </DialogPrimitiveContent>
+        </DialogPortal>
+      </Dialog>
     </main>
   )
 }
