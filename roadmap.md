@@ -4,5 +4,6 @@
 - [x] Verify wallet saving, selection, password checks, and withdrawal flow.
 - [x] Keep wallets and withdrawals as temporary design-preview state; database persistence is intentionally removed.
 - [x] Add the reference-style withdrawal success dialog and verify it.
+- [x] Make the add-wallet dialog and withdrawal form ask for the existing withdrawal password instead of setting a new one; verify.
 - [ ] Export the project source into one file with Repomix.
 - [ ] Remove the Cloud database permanently (workspace admin must use More → Database → Manage → Settings → Remove Database; deletion is irreversible).
