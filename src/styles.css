@@ -63,6 +63,7 @@
 
 :root {
   --radius: 0.625rem;
+  --wallet-logo-surface: oklch(1 0 0);
   --withdraw-success: oklch(0.55 0.12 165);
   --withdraw-success-soft: oklch(0.94 0.055 165);
   --withdraw-success-halo: oklch(0.98 0.02 165);
@@ -5684,6 +5685,7 @@ body,
 
 .withdraw-provider-grid button {
   display: flex;
+  height: auto;
   flex-direction: column;
   align-items: center;
   gap: 1px;

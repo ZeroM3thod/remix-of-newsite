@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 - Keep application behavior in client state without Cloud calls or persistence; this project is a design-only preview.
+- Import wallet logo asset pointers in the existing app component and share the provider-to-logo map across wallet views to keep branding consistent without service calls.
 
 - The whole app UI lives in src/components/BorojajApp.tsx (imported from a Figma Make export) with in-page state navigation; keep it as one client-state component unless real routes are requested — it mirrors the source structure.
 - Keep `@lovable.dev/vite-tanstack-config` in package.json pinned to the version in bun.lock (currently 2.25.3); raising it to 2.26.5 makes install fail with `UNABLE_TO_GET_ISSUER_CERT_LOCALLY` because the newer manifest can't be downloaded here.
