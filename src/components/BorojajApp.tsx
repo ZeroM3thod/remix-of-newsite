@@ -2,6 +2,10 @@ import { useEffect, useRef, useState, type ReactNode } from "react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogPortal, DialogOverlay, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Content as DialogPrimitiveContent } from "@radix-ui/react-dialog"
+import bkashLogo from "@/assets/bkash-logo.png.asset.json"
+import nagadLogo from "@/assets/nagad-logo.png.asset.json"
+import rocketLogo from "@/assets/rocket-logo.png.asset.json"
+import upayLogo from "@/assets/upay-logo.png.asset.json"
 import {
   normalizeDigits,
   validWalletNumber,
@@ -12,6 +16,13 @@ import {
 } from "@/lib/withdrawal"
 
 type Page = "home" | "work" | "earn" | "team" | "profile" | "withdraw" | "settings" | "ledger" | "password" | "wpassword" | "profits" | "download"
+
+const walletLogos: Record<WalletProvider, string> = {
+  bkash: bkashLogo.url,
+  nagad: nagadLogo.url,
+  rocket: rocketLogo.url,
+  upay: upayLogo.url,
+}
 
 function Icon({
   name,
@@ -2259,7 +2270,7 @@ function WithdrawPage({
                   onClick={() => setSelectedWallet(wallet.id)}
                 >
                   <span className={`wallet-provider ${wallet.provider}`}>
-                    {meta.name.slice(0, 1)}
+                    <img src={walletLogos[wallet.provider]} alt={`${meta.english} লোগো`} />
                   </span>
                   <div>
                     <strong>{meta.name}</strong>
@@ -2371,7 +2382,7 @@ function WithdrawPage({
             return (
               <article key={record.id}>
                 <span className={`wallet-provider ${record.provider}`}>
-                  {meta.name.slice(0, 1)}
+                  <img src={walletLogos[record.provider]} alt={`${meta.english} লোগো`} />
                 </span>
                 <div>
                   <strong>
@@ -2440,16 +2451,21 @@ function WithdrawPage({
             </div>
             <div className="withdraw-provider-grid">
               {walletProviders.map((item) => (
-                <button
+                <Button
+                  variant="ghost"
+                  aria-pressed={provider === item.id}
                   className={provider === item.id ? "active" : ""}
                   key={item.id}
                   onClick={() => setProvider(item.id)}
                 >
+                  <span className="wallet-provider">
+                    <img src={walletLogos[item.id]} alt={`${item.english} লোগো`} />
+                  </span>
                   <b>{item.name}</b>
-                  <small>{item.english}</small>
-                </button>
+                </Button>
               ))}
             </div>
+            <p className="wallet-personal-rule">শুধুমাত্র বিকাশ, নগদ, রকেট ও উপায়ের ব্যক্তিগত (পার্সোনাল) নম্বর গ্রহণযোগ্য। এজেন্ট বা মার্চেন্ট নম্বর গ্রহণযোগ্য নয়।</p>
             <label className="office-amount-field">
               <span>অ্যাকাউন্ট নম্বর</span>
               <div>
