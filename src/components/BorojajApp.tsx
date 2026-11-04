@@ -2183,7 +2183,7 @@ function WithdrawPage({
       return
     }
     if (walletPassword.length < 4) {
-      action("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন")
+      action("উত্তোলন পাসওয়ার্ড লিখুন")
       return
     }
     onAddWallet({
@@ -2210,7 +2210,7 @@ function WithdrawPage({
       return
     }
     if (password !== selected.password) {
-      action("ওয়ালেট পাসওয়ার্ড সঠিক নয়")
+      action("উত্তোলন পাসওয়ার্ড সঠিক নয়")
       return
     }
     onWithdraw(amount, totals.fee, totals.net, selected)
@@ -2325,11 +2325,11 @@ function WithdrawPage({
           </div>
         </div>
         <label className="office-amount-field">
-          <span>ওয়ালেট পাসওয়ার্ড</span>
+          <span>উত্তোলন পাসওয়ার্ড</span>
           <div>
             <input
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="পাসওয়ার্ড লিখুন"
+              placeholder="উত্তোলন পাসওয়ার্ড লিখুন"
               type="password"
               value={password}
             />
@@ -2479,16 +2479,17 @@ function WithdrawPage({
               </div>
             </label>
             <label className="office-amount-field">
-              <span>ওয়ালেট পাসওয়ার্ড</span>
+              <span>উত্তোলন পাসওয়ার্ড</span>
               <div>
                 <input
                   onChange={(event) => setWalletPassword(event.target.value)}
-                  placeholder="উত্তোলনের সময় লাগবে"
+                  placeholder="উত্তোলন পাসওয়ার্ড লিখুন"
                   type="password"
                   value={walletPassword}
                 />
               </div>
             </label>
+            <p className="wallet-personal-rule">এখানো নতুন উত্তোলন পাসওয়ার্ড সেট করবেন না — আগে থেকেই থাকা উত্তোলন পাসওয়ার্ড লিখুন।</p>
             <div className="purchase-actions">
               <button
                 className="cancel"
