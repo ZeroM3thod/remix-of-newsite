@@ -1,3 +1,4 @@
+- [ ] Add real wallet provider logos to the picker, saved wallets, and withdrawal records; add the personal-number notice and verify.
 - [x] Add withdrawal page matching existing website and uploaded reference.
 - [x] Add private saved wallets with new Borojaj wallet password and provider selection.
 - [x] Verify wallet saving, selection, password checks, and withdrawal flow.
